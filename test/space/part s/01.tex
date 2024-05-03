@@ -1,0 +1,14 @@
+\section{INTRODUCTION}
+
+NuxTeX is a (La)TeX editting support plugin for Vim and Neovim. This plugin supports |quickfix| function and SyncTeX. It is desigined to minimalize the lerning points for user. So the goal is the very small configuration for neccesarry to work and use the default Vim commands interface as possible.  So the plugin specified commands you should to learn are a few. In the most cases, the only you should memory is the forward search command.
+I think the most plugins released by today increase the learning costs that Vim has already had a lot of things to learn. Is it really useful? For the point of view, I keep in mind to make simple this plugin as described in above. The |quickfix| is the default Vim/Neovim command interface. So it is activated by |:compiler| command and you can use |:make|, |:cfile| and more default |quickfix| commands with optimized output for the (La)TeX. This is simlilar as |tex.vim|, but much more better especially for unnecessary message reduction.
+The SyncTeX function supports GNOME Document Viewer(Evince), Atril, Xreader and Zathura. Both forward and backward search are supported. It is not neccesarry to complex configuration for these pdf viewers to work backward search function.
+This plugin also supports multiple source project like using \\input command.
+
+The reference is (\cite{ref1}).
+\input "part s/02.tex"
+\input "part s/03.tex"
+\begin{eqnarray}
+{\normalsize \dot{x}(t) = a x(t) + b u(t)}
+\end{eqnarray}
+
