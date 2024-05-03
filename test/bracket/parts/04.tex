@@ -1,0 +1,78 @@
+\section{Set compiler}
+
+You can compile the (La)TeX document using by \verb|:make| or \verb|:lmake|. Before execute these commands, you should set up the compilation method.
+There are some methods. I will explain some examples.
+
+Example 1: Use make shell command ~
+
+By default, \verb|:make| command execute make shell command. You can also use this option on NuxTeX.
+In this case, you shoule prepare Makefile described compilation method.
+If you would like to compile the 'foo.tex' document by latex shell command, you should put the 'Makefile' file in the same directory of the 'foo.tex' and it is possible to describe as below.
+
+Makefile:
+\begin{verbatim*}
+>
+	DIR = ./
+	DVI = $(DIR)foo.dvi
+	PDF = $(DIR)foo.pdf
+	
+	$(PDF):    $(DVI)
+		dvipdfmx -o $(PDF) $<
+	
+	$(DVI):    foo.tex
+		latex -synctex=1 -output-directory=$(DIR) $<
+	
+	clean:; latexmk -C --outdir=$(DIR) 
+<
+\end{verbatim*}
+
+Example 2: Set \verb|b:nuxtex_makeprg| or \verb|g:nuxtex_makeprg|
+
+It is possible to set directly LaTeX compiler without create Makefile. You can set the compile method by \verb|b:nuxtex_makeprg| or \verb|g:nuxtex_makeprg|.  The \verb|b:nuxtex_makeprg| is only applied on the buffer configured itself and \verb|g:nuxtex_makeprg| is applied in the whole vim session. These variables should be configured before execute `:compiler nuxtex` firstly in the session because they are read when executing `:compiler nuxtex` and once executed, it will not be loaded more than one time in the buffer even if the command executed in the buffer twice or more.
+If both the variables are configured, \verb|b:nuxtex_makeprg| will be prefered than \verb|g:nuxtex_makeprg|.
+These values will overwrite \verb|makeprg|.
+
+In case of latex:
+\begin{verbatim*}
+>
+	let b:nuxtex_makeprg = 'latex -synctex=1 %:p'
+<
+
+You can set the compiler globally in the vimrc.
+>
+	let g:nuxtex_makeprg = 'latex -synctex=1 %:p'
+<
+\end{verbatim*}
+
+Example 3: Use latexmk ~
+
+Example 2 case is only possible to generate dvi by \verb|:make| command. To
+generate pdf at one time, you can use latexmk.
+
+\begin{verbatim*}
+>
+	let g:nuxtex_makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
+<
+\end{verbatim*}
+
+Example 4: Directly update \verb|makeprg|.
+As described in above, \verb|b:nuxtex_makeprg| and \verb|b:nuxtex_makeprg| will update
+\verb|makeprg| when `:compiler nuxtex` has been done. You can also update the
+compile method by directly update \verb|makeprg|. In this method, you can update
+compiler after once `:compiler nuxtex` has been executed. You may edit some
+scripts if you would like to multiple compilers in multiple laungage without
+using \verb|b:nuxtex_makeprg| or \verb|g:nuxtex_makeprg|.
+
+\begin{verbatim*}
+>
+	let &makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
+<
+\end{verbatim*}
+
+It is also possible to change only buffer local compile option.
+\begin{verbatim*}
+>
+	let &l:makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
+<
+\end{verbatim*}
+
