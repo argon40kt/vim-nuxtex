@@ -1,0 +1,47 @@
+\documentclass[a4,12pt]{ujarticle}
+
+%\usepackage{array}
+%\usepackage{multicol}
+%A4 (210mm)
+\def\baselinestretch{0.9}
+\oddsidemargin=15mm
+\textwidth=180mm
+\addtolength{\oddsidemargin}{-1truein}
+
+%A4 (294mm)
+\topmargin=5truemm
+\textheight=260truemm
+\addtolength{\topmargin}{-1truein}
+
+\begin{filecontents}{filecontents.txt}
+This is file contents.
+bar\end{filecontents}foo
+\begin{document}
+\title{nuxtex.txt}
+\maketitle
+\noindent
+\begin{center}
+LaTeX quickfix and SyncTeX plugin for Vim/Neovim on Linux
+\end{center}
+
+\input "part s/01.tex"
+%\input part s/02.tex
+%\input part s/03.tex
+\input "part s/04.tex"
+\input "part s/05.tex"
+\input "part s/06.tex"
+\input "part s/07.tex"
+\input "part s/08.tex"
+\input "part s/09.tex"
+\input "part s/10.tex"
+\input "part s/11.tex"
+
+\begin{thebibliography}{99}
+\bibitem{ref0}
+Mark: Unknown title, Special Text, vol1, pp.24--27 (2020)
+\bibitem{ref0}
+Mike: UFO text, Special Text, vol1, pp. 28--30 (2020)
+\end{thebibliography}
+\begin{thebibliography}{9}
+\end{thebibliography}
+\end{document}
