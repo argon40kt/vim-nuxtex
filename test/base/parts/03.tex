@@ -1,0 +1,15 @@
+\section{USAGE}
+
+1. Install this plugin and dependencies (if it is neccesarry).
+   See |nuxtex-dependencies|.
+
+2. Set up the document compilation method. See detail in |nuxtex-set-compiler|.
+
+3. Configure \verb|g:nuxtex_viewer_type| as the pdf viewer which you would like to use. The value can be chosed from 'evince', 'atril', 'xreader' and 'zathura'. See \verb|nuxtex-synctex|.
+
+4. Open the LaTeX source and edit it. Once you would like to compile the source, first, choose the compiler plugin as NuxTeX by `:compiler nuxtex`.
+   After that, |:make| to compile. If you don't have any error, go next step.
+   Otherwise, do |:copen| and check the error occured line and fix the root cause. Then, try compile again while there are no error.
+
+5. After compilatoin succeed, you can jump both from source to pdf and pdf to source. To jump to pdf, just |<localleader><localleader>nf| on the LaTeX source. To jump from pdf to source, Ctrl-<Left Click> on the point you would like to see the source on the viewer.
+
