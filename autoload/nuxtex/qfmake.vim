@@ -268,13 +268,16 @@ endfunc
 function! s:qf_cat_fin_status() dict
   let l:cat_fin_con_len = len(self['cat_fin_con'])
   if l:cat_fin_con_len < 1
+    let self['cat_fin_con_idx'] = 0
   elseif s:is_str_equal(s:list[s:idx], self['cat_fin_con'][self['cat_fin_con_idx']])
     if self['cat_fin_con_idx'] >= l:cat_fin_con_len - 1
-      let self['cat_fin_con_idx'] = s:status['not_start']
+      let self['cat_fin_con_idx'] = 0
       return s:status['finish']
     else
       let self['cat_fin_con_idx'] += 1
     endif
+  else
+    let self['cat_fin_con_idx'] = 0
   endif
   return s:status['start']
 endfunc
