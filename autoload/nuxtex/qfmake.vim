@@ -89,13 +89,14 @@ function! s:preprocesser() dict
   let l:qflist = self['getmsg']()
   let s:list = []
   "let g:text = ''
-  let l:pattern = '\([()]\@1<=\|\ze[()]\)\|^! \zs\|[0-9]\([0-9]\)\@!\zs\|^Overfull\zs\|\ze\(line\)\|[^0-9]\([0-9]\)\@=\zs\|\(warning:\)\c\zs\|\ze\.'
+  "let l:pattern = '\([()]\@1<=\|\ze[()]\)\|^!\zs\|[0-9]\([0-9]\)\@!\zs\|[^0-9]\([0-9]\)\@=\zs\|\s\S\@=\zs\|\S\s\@=\zs\|\ze\.\|\.\@1<='
+  let l:pattern = '\([()]\@1<=\|\ze[()]\)\|^!\zs\|[0-9]\([0-9]\)\@!\zs\|[^0-9]\([0-9]\)\@=\zs\|\s\S\@=\zs\|\S\s\@=\zs\|\ze\.'
   while l:index < len(l:qflist)
     let s:list += split(l:qflist[l:index].text, l:pattern) + ["\n"]
     "let g:text .= l:qflist[l:index].text . "\n"
     let l:index = l:index + 1
   endwhile
-  "let g:list = s:list
+  let g:list = s:list
 endfunc
 
 let s:qf_object = {
@@ -150,29 +151,33 @@ function! s:tree() abort
   let l:s4x_qf_warn = deepcopy(l:s4x_qf_dict)
 
 " Set msg and line no select parameter
-  let l:s4x_qf_err['s4x_qf_cat_msg']['cat_start_con'] = ['\s*!\s*']
+  let l:s4x_qf_err['s4x_qf_cat_msg']['cat_start_con'] = ['!']
   let l:s4x_qf_err['s4x_qf_cat_msg']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
-  let l:s4x_qf_err['s4x_qf_cat_line']['cat_start_con'] = ["\n", '\s*l\.\s*', '\s*[0-9]\+\s*']
-  let l:s4x_qf_err['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['\s*[0-9]\+\s*']
-  let l:s4x_qf_overfull['s4x_qf_cat_msg']['cat_start_con'] = ['\s*\(overfull\)\c\s*']
+  let l:s4x_qf_err['s4x_qf_cat_line']['cat_start_con'] = ["\n", 'l\.', '[0-9]\+']
+  let l:s4x_qf_err['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['[0-9]\+']
+  let l:s4x_qf_overfull['s4x_qf_cat_msg']['cat_start_con'] = ['\(overfull\)\c']
   let l:s4x_qf_overfull['s4x_qf_cat_msg']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
-  "let l:s4x_qf_overfull['s4x_qf_cat_msg']['s4x_cat_fin']['cat_fin_con'] = [".*).*"]
-  let l:s4x_qf_overfull['s4x_qf_cat_line']['cat_start_con'] = ['\s*lines\s*', '\s*[0-9]\+\s*']
-  let l:s4x_qf_overfull['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['\s*[0-9]\+\s*']
-  let l:s4x_qf_warn['s4x_qf_cat_msg']['cat_start_con'] = ['\s*\(latex\)\c\s\+\(\(font\)\c\s\+\)\=\(warning\)\c:\s*']
-  let l:s4x_qf_warn['s4x_qf_cat_msg']['s4x_cat_fin']['cat_fin_con'] = ['\s*\.\s*']
-  let l:s4x_qf_warn['s4x_qf_cat_line']['cat_start_con'] = ['\s*line\s*', '\s*[0-9]\+\s*']
-  let l:s4x_qf_warn['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['\s*[0-9]\+\s*']
+  let l:s4x_qf_overfull['s4x_qf_cat_line']['cat_start_con'] = ['lines', '\s\+', '[0-9]\+']
+  let l:s4x_qf_overfull['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['[0-9]\+']
+  let l:s4x_qf_warn['s4x_qf_cat_msg']['cat_start_con'] = ['.*', '.*']
+  "let l:s4x_qf_warn['s4x_qf_cat_msg']['cat_start_con'] = ['\(\(warning\)\c:\|\s\)\@!']
+  let l:s4x_qf_warn['s4x_qf_cat_msg']['s4x_cat_fin']['cat_fin_con'] = ['\.']
+  let l:s4x_qf_warn['s4x_qf_cat_line']['cat_start_con'] = ['line', '\s\+', '[0-9]\+']
+  let l:s4x_qf_warn['s4x_qf_cat_line']['s4x_cat_fin']['cat_fin_con'] = ['[0-9]\+']
 
 " Set each mode global parameter
   let l:s4x_qf_err['level'] = 'E'
-  let l:s4x_qf_err['mode_start_con'] = ['\s*!\s*']
+  let l:s4x_qf_err['mode_start_con'] = ['!']
   let l:s4x_qf_overfull['s4x_mode_fin']['cat_fin_con'] = ["\n"]
   let l:s4x_qf_overfull['mode_start_con'] = ['\(overfull\)\c']
-  let l:s4x_qf_warn['mode_start_con'] = ['\s*\(latex\)\c\s\+\(\(font\)\c\s\+\)\=\(warning\)\c:\s*']
+  let l:s4x_qf_warn['mode_start_con'] = ['\(latex\)\c', '\s\+', '\(warning\)\c:']
   let l:s4x_qf_warn['s4x_mode_fin']['cat_fin_con'] = ["\n", "\n"]
 
-"File path getting function definition
+" Construct LaTeX Font Warning method from LaTeX Warning Method
+  let l:s4x_qf_fwrn = deepcopy(l:s4x_qf_warn)
+  let l:s4x_qf_fwrn['mode_start_con'] = ['\(latex\)\c', '\s\+', '\(font\)\c', '\s\+', '\(warning\)\c:']
+
+" File path getting function definition
   let l:s4x_qf_cat_file = {'file_status': function("s:file_status"),
 	\	'mode_status': s:status['start'],
 	\	'tmp': 0,
@@ -180,11 +185,13 @@ function! s:tree() abort
   let l:s4x_qf_file = deepcopy(l:s4x_qf_cat_file)
 
   while v:true
+  echo s:list[s:idx]
     if l:s4x_qf_file['file_status']()
     elseif s:mode
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
+      call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
     elseif trim(s:list[s:idx]) == '('
       let s:idx += 1
       call s:tree()
@@ -194,6 +201,7 @@ function! s:tree() abort
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
+      call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
     endif
     if s:idx >= len(s:list) - 1
       return
@@ -231,6 +239,7 @@ function! s:file_status() dict
 endfunc
 
 function! s:qf_cat_status() dict
+echo 'Message: cat_start_con_idx = ' . self['cat_start_con_idx']
   if self['cat_status'] == s:status['start']
     " Collect msg/line no
     let self['msg'] .= s:list[s:idx]
@@ -283,6 +292,10 @@ function! s:qf_mode(fpath) dict
   else
     let s:mode = s:status['start']
     let self['mode_status'] = s:status['start']
+    let self['s4x_qf_cat_msg']['cat_start_con_idx'] = 0
+    let self['s4x_qf_cat_msg']['msg'] = ''
+    let self['s4x_qf_cat_line']['cat_start_con_idx'] = 0
+    let self['s4x_qf_cat_line']['msg'] = ''
     "let self['s4x_qf_cat_msg']['cat_start_con_idx'] = 0
     "let self['s4x_qf_cat_msg']['s4x_cat_fin']['msg'] = ''
     "let self['s4x_qf_cat_line']['cat_start_con_idx'] = 0
