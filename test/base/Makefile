@@ -1,11 +1,7 @@
-DIR = ./
-DVI = $(DIR)test.dvi
-PDF = $(DIR)test.pdf
 
-$(PDF):    $(DVI)
-	dvipdfmx -o $(PDF) $<
+all:
+	$(MAKE) -C subdir
 
-$(DVI):    test.tex
-	uplatex -synctex=1 -output-directory=$(DIR) $<
+clean:
+	$(MAKE) clean -C subdir
 
-clean:; latexmk -C --outdir=$(DIR) 
