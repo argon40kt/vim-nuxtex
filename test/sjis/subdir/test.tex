@@ -1,0 +1,28 @@
+\documentclass[a4j,12pt]{jarticle}
+
+%\usepackage{array}
+%\usepackage{multicol}
+%A4 (210mm)
+\def\baselinestretch{0.9}
+\oddsidemargin=15mm
+\textwidth=180mm
+\addtolength{\oddsidemargin}{-1truein}
+
+%A4 (294mm)
+\topmargin=5truemm
+\textheight=260truemm
+\addtolength{\topmargin}{-1truein}
+
+\begin{document}
+\title{日本語によるShift JIS環境のテスト (A trial for Shift JIS environment by Japanese)}
+\maketitle
+
+\section{お試し}
+ここでは日本語環境によるテストを行います。今回、\textbackslashfilecontents環境を用いることで敢えて``Overfull hbox''の警告メッセージを生成します。
+
+(English translation): We try Japanese environment. We use \textbackslash filecontents enviroment to generate `Overfull hbox'  warning messages.
+\begin{filecontents}{ファイルコンテンツ.txt}
+これはfilecontents環境です。
+あいうえお\end{filecontents}かきくけこ
+%\verb|いろはにほへと散りぬるを　わかよたれそ常ならむ　うゐの奥山けふ越えて　あさきゆめみしゑひもせず|
+\end{document}

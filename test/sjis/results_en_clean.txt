@@ -1,0 +1,17 @@
+make clean -C subdir
+make[1]: Entering directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'
+latexmk -C --outdir=./ 
+Latexmk: Missing input file 'test.aux' (or dependence on it) from following:
+  No file test.aux.
+Rc files read:
+  /etc/LatexMk
+  /home/argon/.latexmkrc
+Latexmk: This is Latexmk, John Collins, 7 Jan. 2023. Version 4.79.
+Latexmk: Getting log file 'test.log'
+Latexmk: Examining 'test.log'
+Latexmk: Log file says output to '/test.dvi'
+Latexmk: Doing main (small) clean up for 'test.tex'
+Latexmk: Doing extra clean up (of final output files) for 'test.tex'
+
+make[1]: Leaving directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'
+ 
