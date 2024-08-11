@@ -1,0 +1,97 @@
+uplatex -synctex=1 -output-directory=./subdir/ subdir/test.tex
+This is e-upTeX, Version 3.141592653-p4.0.0-u1.28-220214-2.6 (utf8.uptex) (TeX Live 2022/Debian) (preloaded format=uplatex)
+ restricted \write18 enabled.
+entering extended mode
+(./subdir/test.tex
+pLaTeX2e <2021-11-15u04>+1 (based on LaTeX2e <2022-11-01> patch level 1)
+L3 programming layer <2023-01-16>
+(/usr/share/texlive/texmf-dist/tex/uplatex/base/ujarticle.cls
+Document Class: ujarticle 2020/09/30 v1.8f-u00 Standard upLaTeX class
+(/usr/share/texlive/texmf-dist/tex/uplatex/base/ujsize12.clo))
+
+LaTeX Info: Writing file `./filecontents.txt'.
+
+
+LaTeX Warning: Writing text `bar' before \end{filecontents}
+               \end {filecontents}as last line of filecontents.txt on input lin
+e 18.
+
+
+LaTeX Warning: Ignoring text `foo' after \end{filecontents} on input line 18.
+
+
+LaTeX Warning: Form Feed has been converted to Blank Line.
+
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)
+
+LaTeX Warning: Unused global option(s):
+    [a4].
+
+No file test.aux.
+
+LaTeX Warning: No \author given.
+
+(./subdir//parts/01.tex
+
+LaTeX Warning: Citation `ref1' on page 1 undefined on input line 8.
+
+(./subdir//parts/02.tex) (./subdir//parts/03.tex [1])
+
+LaTeX Font Warning: Command \normalsize invalid in math mode on input line 12.
+
+) (./subdir//parts/04.tex [2]
+Overfull \hbox (265.90079pt too wide) in paragraph at lines 56--56
+[]\OT1/cmtt/m/n/12 let g:nuxtex_makeprg = "latexmk -pdfdvi -latex=latex -syncte
+x=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"[] 
+
+Overfull \hbox (30.32703pt too wide) in paragraph at lines 58--65
+[]\OT1/cmr/m/n/12 Example 4: Di-rectly up-date []\OT1/cmtt/m/n/12 makeprg[]\OT1
+/cmr/m/n/12 . As de-scribed in above, []\OT1/cmtt/m/n/12 b:nuxtex_makeprg []\OT
+1/cmr/m/n/12 and []\OT1/cmtt/m/n/12 b:nuxtex_makeprg
+
+Overfull \hbox (216.50076pt too wide) in paragraph at lines 70--70
+[]\OT1/cmtt/m/n/12 let &makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \
+"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"[] 
+
+Overfull \hbox (228.85077pt too wide) in paragraph at lines 77--77
+[]\OT1/cmtt/m/n/12 let &l:makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e
+ \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"[] 
+) (./subdir//parts/05.tex) (./subdir//parts/06.tex) (./subdir//parts/07.tex
+[3]) (./subdir//parts/08.tex [4]) (./subdir//parts/09.tex
+Overfull \hbox (265.90079pt too wide) in paragraph at lines 198--198
+[]\OT1/cmtt/m/n/12 let g:nuxtex_makeprg = "latexmk -pdfdvi -latex=latex -syncte
+x=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"[] 
+[5] [6] [7] [8]) (./subdir//parts/10.tex
+Overfull \hbox (6.55066pt too wide) in paragraph at lines 14--14
+[]\OT1/cmtt/m/n/12                                 and the (La)TeX source file 
+path will be notified to[] 
+
+Overfull \hbox (12.72566pt too wide) in paragraph at lines 14--14
+[]\OT1/cmtt/m/n/12                                 It is only activeted if the 
+|filetype| of the current[] 
+
+Overfull \hbox (18.90067pt too wide) in paragraph at lines 14--14
+[]\OT1/cmtt/m/n/12                                 buffer is 'tex'. It is possi
+ble to check by the result[] 
+) (./subdir//parts/11.tex)
+
+LaTeX Warning: Empty `thebibliography' environment on input line 46.
+
+[9] [10] (./subdir//test.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ )
+(see the transcript file for additional information)
+Output written on ./subdir//test.dvi (10 pages, 23340 bytes).
+SyncTeX written on ./subdir//test.synctex.gz.
+Transcript written on ./subdir//test.log.
+dvipdfmx -o subdir/test.pdf subdir/test.dvi
+subdir/test.dvi -> subdir/test.pdf
+[1][2][3][4][5][6][7][8][9][10]
+39755 bytes written
+
