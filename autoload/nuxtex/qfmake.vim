@@ -174,6 +174,7 @@ function! s:tree() abort
 " Set each mode global parameter
   let l:s4x_qf_err['level'] = 'E'
   let l:s4x_qf_err['mode_start_con'] = ['!']
+  let l:s4x_qf_err['s4x_mode_fin']['cat_fin_con'] = ["\n", '?']
   let l:s4x_qf_overfull['s4x_mode_fin']['cat_fin_con'] = ["\n"]
   let l:s4x_qf_overfull['mode_start_con'] = ['\(overfull\)\c']
   let l:s4x_qf_warn['mode_start_con'] = ['\(latex\)\c', '\s\+', '\(warning\)\c:']

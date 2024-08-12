@@ -1,0 +1,4 @@
+
+test.tex|1 error| ! LaTeX Error: Missing \begin{document}.
+test.tex|3 error| ! Missing { inserted.
+test.tex|| ! File ended while scanning text of \write.
