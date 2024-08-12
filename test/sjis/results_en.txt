@@ -1,0 +1,43 @@
+make -C subdir
+make[1]: Entering directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'
+platex -kanji=sjis -synctex=1 -output-directory=./ test.tex
+This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (sjis.euc) (TeX Live 2022/Debian) (preloaded format=platex)
+ restricted \write18 enabled.
+entering extended mode
+(.//test.tex
+pLaTeX2e <2021-11-15>+1 (based on LaTeX2e <2022-11-01> patch level 1)
+L3 programming layer <2023-01-16>
+(/usr/share/texlive/texmf-dist/tex/platex/base/jarticle.cls
+Document Class: jarticle 2020/09/30 v1.8f Standard pLaTeX class
+(/usr/share/texlive/texmf-dist/tex/platex/base/jsize12.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)
+No file test.aux.
+
+LaTeX Warning: No \author given.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd)
+
+LaTeX Info: Writing file `./ファイルコンテンツ.txt'.
+
+
+LaTeX Warning: Writing text `あいうえお' before \end{filecontents}
+               \end {filecontents}as last line of ファイルコンテンツ.txt on inp
+ut line 26.
+
+
+LaTeX Warning: Ignoring text `かきくけこ' after \end{filecontents} on input lin
+e 26.
+
+
+LaTeX Warning: Form Feed has been converted to Blank Line.
+
+
+[1] (.//test.aux) )
+Output written on .//test.dvi (1 page, 1264 bytes).
+SyncTeX written on .//test.synctex.gz.
+Transcript written on .//test.log.
+dvipdfmx -o ./test.pdf test.dvi
+test.dvi -> ./test.pdf
+[1]
+11100 bytes written
+make[1]: Leaving directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'

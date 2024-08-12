@@ -1,0 +1,26 @@
+make -C subdir
+make[1]: Entering directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'
+platex -kanji=sjis -synctex=1 -output-directory=./ test.tex
+This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (sjis.euc) (TeX Live 2022/Debian) (preloaded format=platex)
+ restricted \write18 enabled.
+entering extended mode
+(.//test.tex
+pLaTeX2e <2021-11-15>+1 (based on LaTeX2e <2022-11-01> patch level 1)
+L3 programming layer <2023-01-16>
+(/usr/share/texlive/texmf-dist/tex/platex/base/jarticle.cls
+Document Class: jarticle 2020/09/30 v1.8f Standard pLaTeX class
+(/usr/share/texlive/texmf-dist/tex/platex/base/jsize12.clo))
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)
+No file test.aux.
+
+LaTeX Warning: No \author given.
+
+! Undefined control sequence.
+l.21 ...kslashfilecontents環境を用いることで敢えて                                                  ``Overfull hbox''の警告メ...
+? x
+No pages of output.
+Transcript written on .//test.log.
+make[1]: *** [Makefile:9: test.dvi] Error 1
+make[1]: Leaving directory '/home/argon/mnt/github/vim-nuxtex/test/sjis/subdir'
+make: *** [Makefile:3: all] Error 2
+ 

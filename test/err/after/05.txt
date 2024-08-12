@@ -1,0 +1,4 @@
+
+|1 error| ! Missing $ inserted.
+|1 error| ! Missing } inserted.
+|1 error| ! Interruption.
