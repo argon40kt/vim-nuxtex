@@ -1,0 +1,58 @@
+
+cd subdir && uplatex -synctex=1 test.tex
+This is e-upTeX, Version 3.141592653-p3.9.0-u1.27-210218-2.6 (utf8.uptex) (TeX
+ Live 2021/W32TeX) (preloaded format=uplatex)
+ restricted \write18 enabled.
+entering extended mode
+(./test.tex
+pLaTeX2e <2021-06-01u04>+2 (based on LaTeX2e <2021-06-01> patch level 1)
+L3 programming layer <2021-08-27>
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/uplatex/base/ujarticle.cls(g
+uessed encoding: UTF-8 = utf8)
+Document Class: ujarticle 2020/09/30 v1.8f-u00 Standard upLaTeX class
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/uplatex/base/ujsize12.clo))
+
+LaTeX Warning: Writing file `./filecontents.txt'.
+
+
+LaTeX Warning: Writing text `bar' before \end{filecontents}
+               \end {filecontents}as last line of filecontents.txt on input li
+n
+e 18.
+
+
+LaTeX Warning: Ignoring text `foo' after \end{filecontents} on input line 18.
+
+
+LaTeX Warning: Form Feed has been converted to Blank Line.
+
+
+
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-dv
+i
+ps.def)
+
+LaTeX Warning: Unused global option(s):
+    [a4].
+
+No file test.aux.
+
+LaTeX Warning: No \author given.
+
+
+LaTeX Warning: Empty `thebibliography' environment on input line 36.
+
+[1] (./test.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+ )
+Output written on test.dvi (1 page, 844 bytes).
+SyncTeX written on test.synctex.gz.
+
+Transcript written on test.log.
+cd subdir && dvipdfmx -o test.pdf test.dvi
+test.dvi -> test.pdf
+[1]
+12500 bytes written
