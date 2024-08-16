@@ -26,8 +26,8 @@ function! nuxtex#qfmake#allow() abort
   if !exists('g:nuxtex_sub_make_lang')
     let g:nuxtex_sub_make_lang = v:true
   endif
+  let s:old_lang = $LANG
   if g:nuxtex_sub_make_lang
-    let s:old_lang = $LANG
     let $LANG = 'en_US.UTF-8'
   endif
 endfunc
