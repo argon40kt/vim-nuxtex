@@ -22,14 +22,30 @@ function! nuxtex#qfmake#allow() abort
   let s:allow_parse = 1
   " Set WindowID for loclist
   let s:qfdict['winid'] = bufwinid(bufnr())
+  " Set $LANG parameter to change make message as English
+  if !exists('g:nuxtex_sub_make_lang')
+    let g:nuxtex_sub_make_lang = v:true
+  endif
+  if g:nuxtex_sub_make_lang
+    let s:old_lang = $LANG
+    let $LANG = 'en_US.UTF-8'
+  endif
 endfunc
 
 function! nuxtex#qfmake#qf_init() abort
   call s:qf_object['init']()
+  " Back to $LANG enviroment as user configuration
+  if s:allow_parse
+    let $LANG = s:old_lang
+  endif
 endfunc
 
 function! nuxtex#qfmake#loc_init() abort
   call s:loc_object['init']()
+  " Back to $LANG enviroment as user configuration
+  if s:allow_parse
+    let $LANG = s:old_lang
+  endif
 endfunc
 
 function! s:init() dict
@@ -111,6 +127,7 @@ let s:loc_object['setmsg'] = function("s:set_loc")
 
 
 function! s:tree_monitor() abort
+  echo $LANG
   let s:status = {'not_start': 0, 'start': 1, 'finish': 2}
   let s:idx = 0
   let s:mode = s:status['not_start']
