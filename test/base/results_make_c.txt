@@ -1,0 +1,140 @@
+
+make: Entering directory 'C:/Users/argon/vimfiles/pack/own/s
+tart/vim-nuxtex/test/base/subdir'
+uplatex -synctex=1 -output-directory=./ test.tex
+This is e-upTeX, Version 3.141592653-p3.9.0-u1.27-210218-2.6
+ (utf8.uptex) (TeX Live 2021/W32TeX) (preloaded format=uplat
+ex)
+ restricted \write18 enabled.
+entering extended mode
+(.//test.tex
+pLaTeX2e <2021-06-01u04>+2 (based on LaTeX2e <2021-06-01> pa
+tch level 1)
+L3 programming layer <2021-08-27>
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/uplatex/ba
+se/ujarticle.cls(guessed encoding: UTF-8 = utf8)
+Document Class: ujarticle 2020/09/30 v1.8f-u00 Standard upLa
+TeX class
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/uplatex/ba
+se/ujsize12.clo))
+
+LaTeX Warning: Writing file `./filecontents.txt'.
+
+
+LaTeX Warning: Writing text `bar' before \end{filecontents}
+               \end {filecontents}as last line of fileconten
+ts.txt on input lin
+e 18.
+
+
+LaTeX Warning: Ignoring text `foo' after \end{filecontents}
+on input line 18.
+
+
+LaTeX Warning: Form Feed has been converted to Blank Line.
+
+
+
+(c:/Users/argon/local/texlive/2021/texmf-dist/tex/latex/l3ba
+ckend/l3backend-dvi
+ps.def)
+
+LaTeX Warning: Unused global option(s):
+    [a4].
+
+No file test.aux.
+
+LaTeX Warning: No \author given.
+
+(.//parts/01.tex
+
+LaTeX Warning: Citation `ref1' on page 1 undefined on input
+line 8.
+
+(.//parts/02.tex) (.//parts/03.tex [1])
+
+LaTeX Font Warning: Command \normalsize invalid in math mode
+ on input line 12.
+
+) (.//parts/04.tex [2]
+Overfull \hbox (265.90079pt too wide) in paragraph at lines
+56--56
+[]\OT1/cmtt/m/n/12 let g:nuxtex_makeprg = "latexmk -pdfdvi -
+latex=latex -syncte
+x=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\
+" %:p"[]
+
+Overfull \hbox (30.32703pt too wide) in paragraph at lines 5
+8--65
+[]\OT1/cmr/m/n/12 Example 4: Di-rectly up-date []\OT1/cmtt/m
+/n/12 makeprg[]\OT1
+/cmr/m/n/12 . As de-scribed in above, []\OT1/cmtt/m/n/12 b:n
+uxtex_makeprg []\OT
+1/cmr/m/n/12 and []\OT1/cmtt/m/n/12 b:nuxtex_makeprg
+
+Overfull \hbox (216.50076pt too wide) in paragraph at lines
+70--70
+[]\OT1/cmtt/m/n/12 let &makeprg = "latexmk -pdfdvi -latex=la
+tex -synctex=1 -e \
+"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"[]
+
+
+Overfull \hbox (228.85077pt too wide) in paragraph at lines
+77--77
+[]\OT1/cmtt/m/n/12 let &l:makeprg = "latexmk -pdfdvi -latex=
+latex -synctex=1 -e
+ \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
+[]
+) (.//parts/05.tex) (.//parts/06.tex) (.//parts/07.tex [3])
+(.//parts/08.tex
+[4]) (.//parts/09.tex
+Overfull \hbox (265.90079pt too wide) in paragraph at lines
+198--198
+[]\OT1/cmtt/m/n/12 let g:nuxtex_makeprg = "latexmk -pdfdvi -
+latex=latex -syncte
+x=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\
+" %:p"[]
+[5] [6] [7] [8]) (.//parts/10.tex
+Overfull \hbox (6.55066pt too wide) in paragraph at lines 14
+--14
+[]\OT1/cmtt/m/n/12                                 and the (
+La)TeX source file
+path will be notified to[]
+
+Overfull \hbox (12.72566pt too wide) in paragraph at lines 1
+4--14
+[]\OT1/cmtt/m/n/12                                 It is onl
+y activeted if the
+|filetype| of the current[]
+
+Overfull \hbox (18.90067pt too wide) in paragraph at lines 1
+4--14
+[]\OT1/cmtt/m/n/12                                 buffer is
+ 'tex'. It is possi
+ble to check by the result[]
+) (.//parts/11.tex)
+
+LaTeX Warning: Empty `thebibliography' environment on input
+line 46.
+
+[9] [10] (.//test.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross
+-references right.
+
+ )
+(see the transcript file for additional information)
+Output written on .//test.dvi (10 pages, 23288 bytes).
+SyncTeX written on .//test.synctex.gz.
+
+Transcript written on .//test.log.
+dvipdfmx -o ./test.pdf test.dvi
+test.dvi -> ./test.pdf
+[1][2][3][4][5][6][7][8][9][10]
+43609 bytes written
+make: Leaving directory 'C:/Users/argon/vimfiles/pack/own/st
+art/vim-nuxtex/test/base/subdir'
+
