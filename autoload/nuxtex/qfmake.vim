@@ -116,7 +116,7 @@ function! s:tree_monitor() abort
   let s:mode = s:status['not_start']
 " Execute tree() analysis while all phrase analysis has not been done.
   while v:true
-    call s:tree()
+    call s:tree(v:false, '')
     if s:idx >= len(s:list) - 1
       return
     endif
@@ -124,7 +124,7 @@ function! s:tree_monitor() abort
   endwhile
 endfunc
 
-function! s:tree() abort
+function! s:tree(file_search, dir) abort
 " Define class (Dictionary(function))
   let l:s4x_qf_cat_fin_dict = {'qf_cat_fin_status': function("s:qf_cat_fin_status"),
 		\	'cat_fin_con': [],
@@ -197,9 +197,58 @@ function! s:tree() abort
 	\	'file': ''}
   let l:s4x_qf_file = deepcopy(l:s4x_qf_cat_file)
 
+" Define directory path getting class
+  let l:s4x_qf_cat_fin_dict = {'qf_cat_fin_status': function("s:qf_cat_fin_status"),
+		\	'cat_fin_con': [],
+		\	'cat_fin_con_idx': 0}
+  let l:s4x_qf_cat_dict = {'qf_cat_status': function("s:qf_cat_status"),
+		\	'cat_status': s:status['not_start'],
+		\	'cat_start_con': [],
+		\	'cat_start_con_idx': 0,
+		\	's4x_cat_fin': deepcopy(l:s4x_qf_cat_fin_dict),
+		\	'msg': ''}
+  let l:s4x_qf_sub_make = {'sub_make_status': function("s:sub_make_status"),
+	  	\	'sub_make_cat': deepcopy(l:s4x_qf_cat_dict)}
+
+" Directory getting function definition
+  let l:sub_make_in = deepcopy(l:s4x_qf_sub_make)
+  let l:make_C_in = deepcopy(l:s4x_qf_sub_make)
+  let l:sub_make_out = deepcopy(l:s4x_qf_sub_make)
+  let l:make_C_out = deepcopy(l:s4x_qf_sub_make)
+
+  let l:sub_make_in['sub_make_cat']['cat_start_con'] = [
+	\  'make[', '[0-9]\+', ']:', '\s\+',
+	\  'Entering', '\s\+', 'directory', '\s\+']
+  let l:make_C_in['sub_make_cat']['cat_start_con'] = [
+	\  'make:', '\s\+', 'Entering', '\s\+', 'directory', '\s\+']
+  let l:sub_make_out['sub_make_cat']['cat_start_con'] = [
+	\  'make[', '[0-9]\+', ']:', '\s\+',
+	\  'Leaving', '\s\+', 'directory', '\s\+']
+  let l:make_C_out['sub_make_cat']['cat_start_con'] = [
+	\  'make:', '\s\+', 'Leaving', '\s\+', 'directory', '\s\+']
+
+  let l:sub_make_in['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
+  let l:make_C_in['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
+  let l:sub_make_out['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
+  let l:make_C_out['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
+
+  " For adding directory path prefix
+  if a:file_search
+    let l:s4x_qf_file['file'] = a:dir . '/'
+  else
+    let l:s4x_qf_file['mode_status'] = s:status['not_start']
+  endif
+  let l:list = ['']
+  " Main loop
   while v:true
     if l:s4x_qf_file['file_status']()
     elseif s:mode
+      let l:list[0] = s:list[s:idx]
+      if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
+        call s:tree(v:false, l:list[0])
+      elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
+        return
+      endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
@@ -208,10 +257,16 @@ function! s:tree() abort
       call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
     elseif trim(s:list[s:idx]) == '('
       let s:idx += 1
-      call s:tree()
+      call s:tree(v:true, a:dir)
     elseif trim(s:list[s:idx]) == ')'
       return
     else
+      let l:list[0] = s:list[s:idx]
+      if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
+        call s:tree(v:false, l:list[0])
+      elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
+        return
+      endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
@@ -356,6 +411,47 @@ let s:qfdict = {'categorize_msg': function("s:categorize_msg"),
 	\	'warnlist': [],
 	\	'infolist': [],
 	\	'winid': 0}
+
+function s:ltrim(list) abort
+  let l:str = trim(a:list[0])
+  let l:after = ''
+  let l:len_str = strchars(l:str)
+  if strcharpart(l:str,0,1) == "'"
+    let l:start = 1
+  else
+    let l:start = 0
+  endif
+  if strcharpart(l:str,l:len_str - 1,1) == "'"
+    let l:length = l:len_str - l:start - 1
+  else
+    let l:length = l:len_str - l:start
+  endif
+  let l:after = strcharpart(l:str,l:start,l:length)
+
+  let l:list = a:list
+  let l:list[0] = l:after
+endfunc
+
+function s:sub_make_status(list) dict
+  let l:list = a:list
+  if !self['sub_make_cat']['cat_status'] && s:mode
+    return 0
+  endif
+  call self['sub_make_cat']['qf_cat_status']()
+  let l:dir_status = self['sub_make_cat']['cat_status']
+  if l:dir_status == 2
+    let self['sub_make_cat']['cat_status'] = 0
+    let self['sub_make_cat']['cat_start_con_idx'] = 0
+    let l:dir = self['sub_make_cat']['msg']
+    let l:list[0] = l:dir
+    call s:ltrim(l:list)
+    let s:mode = 0
+    return 1
+  elseif l:dir_status == 1
+    let s:mode = 1
+  endif
+  return 0
+endfunc
 
 function! s:is_str_equal(str, pattern) abort
   let l:list = matchstrpos(a:str, a:pattern)
