@@ -22,14 +22,30 @@ function! nuxtex#qfmake#allow() abort
   let s:allow_parse = 1
   " Set WindowID for loclist
   let s:qfdict['winid'] = bufwinid(bufnr())
+  " Set $LANG parameter to change make message as English
+  if !exists('g:nuxtex_sub_make_lang')
+    let g:nuxtex_sub_make_lang = v:true
+  endif
+  let s:old_lang = $LANG
+  if g:nuxtex_sub_make_lang
+    let $LANG = 'en_US.UTF-8'
+  endif
 endfunc
 
 function! nuxtex#qfmake#qf_init() abort
   call s:qf_object['init']()
+  " Back to $LANG enviroment as user configuration
+  if s:allow_parse
+    let $LANG = s:old_lang
+  endif
 endfunc
 
 function! nuxtex#qfmake#loc_init() abort
   call s:loc_object['init']()
+  " Back to $LANG enviroment as user configuration
+  if s:allow_parse
+    let $LANG = s:old_lang
+  endif
 endfunc
 
 function! s:init() dict
@@ -111,6 +127,7 @@ let s:loc_object['setmsg'] = function("s:set_loc")
 
 
 function! s:tree_monitor() abort
+  echo $LANG
   let s:status = {'not_start': 0, 'start': 1, 'finish': 2}
   let s:idx = 0
   let s:mode = s:status['not_start']
@@ -234,7 +251,11 @@ function! s:tree(file_search, dir) abort
 
   " For adding directory path prefix
   if a:file_search
-    let l:s4x_qf_file['file'] = a:dir . '/'
+    if a:dir == ''
+      let l:s4x_qf_file['file'] = ''
+    else
+      let l:s4x_qf_file['file'] = a:dir . '/'
+    endif
   else
     let l:s4x_qf_file['mode_status'] = s:status['not_start']
   endif
@@ -247,7 +268,10 @@ function! s:tree(file_search, dir) abort
       if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        return
+        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
+	  echo "exit\n"
+          return
+	endif
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
@@ -265,7 +289,10 @@ function! s:tree(file_search, dir) abort
       if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        return
+        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
+	  echo "exit\n"
+          return
+	endif
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
@@ -306,6 +333,7 @@ function! s:file_status() dict
       endif
     endif
   endif
+  "echo self['file']
   return self['mode_status']
 endfunc
 
@@ -430,6 +458,7 @@ function s:ltrim(list) abort
 
   let l:list = a:list
   let l:list[0] = l:after
+  echo l:after
 endfunc
 
 function s:sub_make_status(list) dict

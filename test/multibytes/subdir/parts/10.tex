@@ -1,0 +1,15 @@
+\section{Mappings}
+
+\begin{verbatim*}
+						*:<localleader><localleader>nf*
+<localleader><localleader>nf	Execute forward search. The current cursor position
+                                and the (La)TeX source file path will be notified to
+                                the pdf viewer set in |g:nuxtex_viewer_type|.
+                                It is only activeted if the |filetype| of the current
+                                buffer is 'tex'. It is possible to check by the result
+                                of the `echo &ft`.
+                                This command behaviour is same as
+                                |:NuxtexFwd|.
+                                See also |nuxtex-synctex|.
+\end{verbatim*}
+
