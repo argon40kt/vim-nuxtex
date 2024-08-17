@@ -264,7 +264,10 @@ function! s:tree(file_search, dir) abort
       if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        return
+        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
+	  echo "exit\n"
+          return
+	endif
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
@@ -282,7 +285,10 @@ function! s:tree(file_search, dir) abort
       if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        return
+        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
+	  echo "exit\n"
+          return
+	endif
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
