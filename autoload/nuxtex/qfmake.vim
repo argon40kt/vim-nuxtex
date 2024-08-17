@@ -251,7 +251,11 @@ function! s:tree(file_search, dir) abort
 
   " For adding directory path prefix
   if a:file_search
-    let l:s4x_qf_file['file'] = a:dir . '/'
+    if a:dir == ''
+      let l:s4x_qf_file['file'] = ''
+    else
+      let l:s4x_qf_file['file'] = a:dir . '/'
+    endif
   else
     let l:s4x_qf_file['mode_status'] = s:status['not_start']
   endif
@@ -329,6 +333,7 @@ function! s:file_status() dict
       endif
     endif
   endif
+  echo self['file']
   return self['mode_status']
 endfunc
 
