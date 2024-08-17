@@ -1,0 +1,57 @@
+\section{Forward and backward search}
+
+Once the (La)TeX document compilation succeed, it is possible to jump from the source to the corresponding point of the generated pdf (forward search) or jump from pdf to the corresponding point of the source (backward search).
+This is called SyncTeX feature. NuxTeX supports this feature. Also, there are some pdf viewers support SyncTeX. NuxTeX supports below viewers.
+
+- GNOME Document Viewer (Evince)
+
+- Atril
+
+- Xreader
+
+- Zathura
+
+These viewers are constantlly used in GNU/Linux distributions. Why NuxTeX supports these viewers is that they have DBus SyncTeX interfaces. These interfaces broadcast (La)TeX source point when the backward search is executed.  So you have not to set up the complex configuration for the viewers. The DBus protocol is focused on GNU/Linux so because of this, NuxTeX is focused on the platform.
+
+Before using forward search, you should choose a pdf viewer to open the product.
+This is possible by configure \verb|g:nuxtex_viewer_type|. The parameter can be set 'evince', 'atril', 'xreader' and 'zathura'.
+
+Example:
+\begin{verbatim*}
+>
+	"To choose Evince
+	let g:nuxtex_viewer_type = 'evince'
+
+	"To choose Atril
+	let g:nuxtex_viewer_type = 'atril'
+
+	"To choose Xreader
+	let g:nuxtex_viewer_type = 'xreader'
+
+	"To choose Zathura
+	let g:nuxtex_viewer_type = 'zathura'
+<
+\end{verbatim*}
+
+If the parameter has not be set, by the default, Evince will be used for open the product.
+
+After set the parameter, it is possible to forward search by type \verb|<localleader><localleader>nf| on the (La)TeX source.
+You can execute backward search by Ctrl-Left click on the pdf viewers. The backward search function will be activated after the once forward search command was executed.
+
+NuxTeX SyncTeX function supports multple file project. The backward search function will search the (La)TeX source stored in the buffer.  Also, the forward search function supports multiple files. For this feature, the plugin have to search the output pdf. The algorithm search the source by
+below order.
+
+1. Check the file path described in \verb|b:nuxtex_output_pdf| if it was set.
+
+2. If \verb|b:nuxtex_output_pdf| was not set, check the file path written in
+   `%!TeX root` on the header of the document source.
+
+3. If `%!TeX root` was not set in the header of the document, the plugin will
+   search the output pdf for parental directory recursively.
+   If `gzip` command is installed on the system and set \verb|g:nuxtex_gz_parse| as
+   \verb|v:true|(this is the default configuration), the plugin will analyze
+   *.synctex.gz file and check the file is whether it is for the (La)TeX source.
+   This is useful for if there are multiple *.gz file on the own and parental directory of the source. In this case, the plugin will search matched *.synctex.gz file and tell the pdf viewer to the location of source and the pare of the source and pdf.
+
+On the 3. section, the plugin assume the output pdf and *.synctex.gz file is on the same directory.
+

@@ -333,7 +333,7 @@ function! s:file_status() dict
       endif
     endif
   endif
-  echo self['file']
+  "echo self['file']
   return self['mode_status']
 endfunc
 
