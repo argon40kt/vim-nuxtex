@@ -112,7 +112,7 @@ function! s:preprocesser() dict
     "let g:text .= l:qflist[l:index].text . "\n"
     let l:index = l:index + 1
   endwhile
-  let g:list = s:list
+  "let g:list = s:list
 endfunc
 
 let s:qf_object = {
@@ -127,7 +127,7 @@ let s:loc_object['setmsg'] = function("s:set_loc")
 
 
 function! s:tree_monitor() abort
-  echo $LANG
+  "echo $LANG
   let s:status = {'not_start': 0, 'start': 1, 'finish': 2}
   let s:idx = 0
   let s:mode = s:status['not_start']
@@ -269,7 +269,7 @@ function! s:tree(file_search, dir) abort
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
         if simplify(l:list[0] . '/') == simplify(a:dir . '/')
-	  echo "exit\n"
+	  "echo "exit\n"
           return
 	endif
       endif
@@ -290,7 +290,7 @@ function! s:tree(file_search, dir) abort
         call s:tree(v:false, l:list[0])
       elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
         if simplify(l:list[0] . '/') == simplify(a:dir . '/')
-	  echo "exit\n"
+	  "echo "exit\n"
           return
 	endif
       endif
@@ -458,7 +458,7 @@ function s:ltrim(list) abort
 
   let l:list = a:list
   let l:list[0] = l:after
-  echo l:after
+  "echo l:after
 endfunc
 
 function s:sub_make_status(list) dict
