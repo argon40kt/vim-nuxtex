@@ -1,7 +1,9 @@
 
 all:
+	$(MAKE) -C pre
 	$(MAKE) -C subdir
+	cd output && make
 
 clean:
-	$(MAKE) clean -C subdir
+	rm output/test*
 

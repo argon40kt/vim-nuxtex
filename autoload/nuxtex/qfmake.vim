@@ -458,6 +458,7 @@ function s:ltrim(list) abort
 
   let l:list = a:list
   let l:list[0] = l:after
+  echo l:after
 endfunc
 
 function s:sub_make_status(list) dict
