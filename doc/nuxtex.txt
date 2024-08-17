@@ -330,6 +330,21 @@ g:nuxtex_force_quickfix				*g:nuxtex_force_quickfix*
 	parameter. Set `let g:nuxtex_force_quickfix = v:true` to activate
 	this feature.
 
+g:nuxtex_sub_make_lang				*g:nuxtex_sub_make_lang*
+	Type: boolean
+	Default: |v:true|
+	This variable activate or deactivate multi language support for
+	make command log when sub-make or `make -C` was used. NuxTeX
+	reads the GNU make command Entering/Leaving directories messages
+	and guess the target source path for quickfix. If this option
+	set as |v:false|, NuxTeX cannot detect directory changing by
+	GNU make when using other than English.
+	If this option is |v:true|(by default), the plugin set $LANG
+	environment as en_US.UTF-8 while compiler is executed and
+	back to previous value after compile. So you can set this
+	variable as |v:false| if there are some issue related to language
+	in compile.
+
 g:nuxtex_gz_parse				*g:nuxtex_gz_parse*
 	Type: boolean
 	Default: |v:true|
