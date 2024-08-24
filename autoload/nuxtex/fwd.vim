@@ -141,7 +141,11 @@ function s:get_outputfile() abort
 					let l:tex_src_native = ''
 					let l:idx = 2
 					while l:idx < len(l:tex_src_list)
-						let l:tex_src_native .= l:tex_src_list[l:idx]
+						let l:tex_src_part = l:tex_src_list[l:idx]
+						if has('win32') && l:idx == 2
+							let l:tex_src_part = toupper(l:tex_src_part)
+						endif
+						let l:tex_src_native .= l:tex_src_part
 						let l:idx += 1
 					endwhile
 					"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
