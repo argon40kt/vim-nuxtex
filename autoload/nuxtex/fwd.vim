@@ -112,7 +112,8 @@ function s:get_outputfile() abort
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
-				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . '"' . l:synctex_gz_file . '"'), g:nuxtex_sys_enc, &enc), '\n')
+				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . shellescape(l:synctex_gz_file)), g:nuxtex_sys_enc, &enc), '\n')
+				echo &enc . "\n"
 			endif
 
 			" Reading synctex.gz file.
@@ -140,7 +141,11 @@ function s:get_outputfile() abort
 					let l:tex_src_native = ''
 					let l:idx = 2
 					while l:idx < len(l:tex_src_list)
-						let l:tex_src_native .= l:tex_src_list[l:idx]
+						let l:tex_src_part = l:tex_src_list[l:idx]
+						if has('win32') && l:idx == 2
+							let l:tex_src_part = toupper(l:tex_src_part)
+						endif
+						let l:tex_src_native .= l:tex_src_part
 						let l:idx += 1
 					endwhile
 					"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
