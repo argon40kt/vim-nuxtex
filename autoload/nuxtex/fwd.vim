@@ -112,7 +112,8 @@ function s:get_outputfile() abort
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
-				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . '"' . l:synctex_gz_file . '"'), g:nuxtex_sys_enc, &enc), '\n')
+				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . shellescape(l:synctex_gz_file)), g:nuxtex_sys_enc, &enc), '\n')
+				echo &enc . "\n"
 			endif
 
 			" Reading synctex.gz file.
