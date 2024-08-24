@@ -108,8 +108,9 @@ function s:get_outputfile() abort
 
 		" Search all synctex.gz file on the directory.
 		for l:synctex_gz_file in l:synctex_gz
+			echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
-				let l:gzip_stdout = systemlist(l:gzip_cmd . '"' . l:synctex_gz_file . '"')
+				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
 				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . '"' . l:synctex_gz_file . '"'), g:nuxtex_sys_enc, &enc), '\n')
 			endif
@@ -135,7 +136,15 @@ function s:get_outputfile() abort
 					let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
 				else
 					" Native source path described in synctex.gz.
-					let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
+					let l:tex_src_list = split(l:gzip_stdout_line,':\zs')
+					let l:tex_src_native = ''
+					let l:idx = 2
+					while l:idx < len(l:tex_src_list)
+						let l:tex_src_native .= l:tex_src_list[l:idx]
+						let l:idx += 1
+					endwhile
+					"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
+					echo l:tex_src_native
 					let l:tex_src_input = simplify(l:tex_src_native)
 				endif
 
