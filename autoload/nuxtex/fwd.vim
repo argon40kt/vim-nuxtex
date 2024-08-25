@@ -139,6 +139,9 @@ function s:get_outputfile() abort
 				"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
 				echo l:tex_src_native
 				let l:tex_src_input = simplify(l:tex_src_native)
+				if has('win32')
+					let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
+				endif
 
 				if simplify(l:input_src) == l:tex_src_input
 
