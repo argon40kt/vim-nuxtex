@@ -124,34 +124,21 @@ function s:get_outputfile() abort
 					break
 				endif
 
-				if has('win32')
-					let l:tex_src_drv = split(l:gzip_stdout_line,':')[2]
-					let l:tex_src_drive = toupper(l:tex_src_drv)
-					let l:tex_src_path = split(l:gzip_stdout_line,':')[3]
-					" " Native source path described in synctex.gz.
-					" let l:tex_src_native = l:tex_src_drv . ':' . l:tex_src_path
-					" let l:tex_src_native = substitute(l:tex_src_native, '/', '\', 'g')
-
-					let l:tex_src_input = l:tex_src_drive . ':' . l:tex_src_path
-					let l:tex_src_input = simplify(l:tex_src_input)
-					let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
-				else
-					" Native source path described in synctex.gz.
-					let l:tex_src_list = split(l:gzip_stdout_line,':\zs')
-					let l:tex_src_native = ''
-					let l:idx = 2
-					while l:idx < len(l:tex_src_list)
-						let l:tex_src_part = l:tex_src_list[l:idx]
-						if has('win32') && l:idx == 2
-							let l:tex_src_part = toupper(l:tex_src_part)
-						endif
-						let l:tex_src_native .= l:tex_src_part
-						let l:idx += 1
-					endwhile
-					"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
-					echo l:tex_src_native
-					let l:tex_src_input = simplify(l:tex_src_native)
-				endif
+				" Native source path described in synctex.gz.
+				let l:tex_src_list = split(l:gzip_stdout_line,':\zs')
+				let l:tex_src_native = ''
+				let l:idx = 2
+				while l:idx < len(l:tex_src_list)
+					let l:tex_src_part = l:tex_src_list[l:idx]
+					if has('win32') && l:idx == 2
+						let l:tex_src_part = toupper(l:tex_src_part)
+					endif
+					let l:tex_src_native .= l:tex_src_part
+					let l:idx += 1
+				endwhile
+				"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
+				echo l:tex_src_native
+				let l:tex_src_input = simplify(l:tex_src_native)
 
 				if simplify(l:input_src) == l:tex_src_input
 
