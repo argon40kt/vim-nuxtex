@@ -253,7 +253,7 @@ function s:synctex_cmd_collection() abort
 			let g:nuxtex_zathura_cmd = 'zathura'
 		endif
 		if !exists('g:nuxtex_zathura_opt')
-			let g:nuxtex_zathura_opt = '--synctex-forward "@line:@col:@tex" "@pdf"'
+			let g:nuxtex_zathura_opt = '--synctex-forward @line:@col:@tex @pdf'
 		endif
 		let l:viewer_native = g:nuxtex_zathura_cmd
 		let l:viewer_opt = g:nuxtex_zathura_opt
@@ -264,7 +264,7 @@ function s:synctex_cmd_collection() abort
 		let l:script = s:script_directory . '/fwdpy.py'
 		let l:viewer_opt = l:script . ' ' .
 			\	g:nuxtex_viewer_type .
-			\	' "@line:@col:@tex" "@pdf"'
+			\	' @line:@col:@tex @pdf'
 	else
 		echoerr 'Unknown type of viewer g:nuxtex_viewer_type = "' . g:nuxtex_viewer_type . '".'
 		return
@@ -321,11 +321,27 @@ endfunction
 
 function s:modify_pdf_cmd(input_src, output_pdf) abort
 "TO DO embed fnameescape().
+	if !exists('g:nuxtex_syncsrc_escape')
+		let g:nuxtex_syncsrc_escape = v:true
+	endif
+	if g:nuxtex_syncsrc_escape != v:false
+		let l:input_src = shellescape(a:input_src)
+	else
+		let l:input_src = a:input_src
+	endif
+	if !exists('g:nuxtex_syncpdf_escape')
+		let g:nuxtex_syncpdf_escape = v:true
+	endif
+	if g:nuxtex_syncpdf_escape != v:false
+		let l:output_pdf = shellescape(a:output_pdf)
+	else
+		let l:output_pdf = a:output_pdf
+	endif
 	let l:viewer_cmd = s:synctex_cmd_collection()
-	let l:fwd_cmd = substitute(l:viewer_cmd, '@pdf', '\=a:output_pdf', 'g')
+	let l:fwd_cmd = substitute(l:viewer_cmd, '@pdf', '\=l:output_pdf', 'g')
 	let l:fwd_cmd = substitute(l:fwd_cmd, '@line', line('.'), 'g')
 	let l:fwd_cmd = substitute(l:fwd_cmd, '@col', col('.'), 'g')
-	let l:fwd_cmd = substitute(l:fwd_cmd, '@tex', '\=a:input_src', 'g')
+	let l:fwd_cmd = substitute(l:fwd_cmd, '@tex', '\=l:input_src', 'g')
 
 	return l:fwd_cmd
 endfunction

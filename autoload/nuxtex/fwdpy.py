@@ -28,7 +28,7 @@ class ForwardEvince:
                                            self.daemon_obj_path,
                                            self.daemon_obj_interface)
 
-        pdf_uri = 'file://' + urllib.parse.quote(pdf_path)
+        pdf_uri = 'file://'+urllib.parse.quote(pdf_path, safe="/!$&'()*+,:=@")
         # ,safe="/\!#$&'()-=^[]{}@`+_")
 
         # Getting object path of openning target document
