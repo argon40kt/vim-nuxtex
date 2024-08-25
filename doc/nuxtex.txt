@@ -496,6 +496,20 @@ g:nuxtex_zathura_opt				*g:nuxtex_zathura_opt*
 
 	This variable is used in if |g:nuxtex_viewer_type| set as 'zathura'.
 
+g:nuxtex_syncsrc_escape				*g:nuxtex_syncsrc_escape*
+	Type: boolean
+	Default: v:true
+	This variables for activate or deactivate shell escaping TeX source
+	path when send forward search command. v:true is activation and
+	v:false is deactivation. So it is activated by default.
+
+g:nuxtex_syncpdf_escape				*g:nuxtex_syncpdf_escape*
+	Type: boolean
+	Default: v:true
+	This variables for activate or deactivate shell escaping output pdf
+	file path when send forward search command. v:true is activation and
+	v:false is deactivation. So it is activated by default.
+
 ==============================================================================
 COMMANDS					*nuxtex-commands*
 
