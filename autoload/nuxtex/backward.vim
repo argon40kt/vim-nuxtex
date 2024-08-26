@@ -40,18 +40,24 @@ endfunction
 function s:SyncSourceStdOut(callback) abort
 
 	let l:callback = split(a:callback, '|')
-	try
-		let l:viewer = l:callback[3]
+	"try
+	let l:size = len(l:callback)
+		let l:viewer = l:callback[l:size - 1]
 		"exec '!echo g:nuxtex_viewer_type = ' . g:nuxtex_viewer_type . ' >> $HOME/synctex.log'
 		"exec '!echo l:viewer = ' . l:viewer . ' >> $HOME/synctex.log'
 		if l:viewer ==# g:nuxtex_viewer_type
-			let l:file = l:callback[0]
-			let l:line = str2nr(l:callback[1])
-			let l:col = str2nr(l:callback[2])
+			let l:file = ''
+			let l:idx = 0
+			while l:idx < l:size - 3
+				let l:file .= l:callback[l:idx]
+				let l:idx += 1
+			endwhile
+			let l:line = str2nr(l:callback[l:size - 3])
+			let l:col = str2nr(l:callback[l:size - 2])
 			call s:cursor_travel(l:file, l:line, l:col)
 		endif
-	catch
-	endtry
+	"catch
+	"endtry
 endfunction
 
 function nuxtex#backward#status_syncsrc() abort
