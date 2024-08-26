@@ -23,7 +23,7 @@ class evince:
         self.Out(path, line, col)
 
     def Out(self, path, line, col):
-        print(path + '|' + line + '|' + col + '|' + self.viewer, flush=True)
+        print(self.viewer + '|' + line + '|' + col + '|' + path, flush=True)
         # print(path + '|' + line + '|' + col, flush=True)
 
 
