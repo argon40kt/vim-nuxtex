@@ -1,3 +1,6 @@
+" vim-nuxtex is a LaTeX quickfix and SyncTeX plugin for Vim/Neovim on Linux
+" Developper: Kenichi Takizawa
+" License: MIT
 
 if exists("current_compiler")
   finish

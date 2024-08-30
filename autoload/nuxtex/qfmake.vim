@@ -1,5 +1,10 @@
+" vim-nuxtex is a LaTeX quickfix and SyncTeX plugin for Vim/Neovim on Linux
+" Developper: Kenichi Takizawa
+" License: MIT
 
 "set re=0
+let s:save_cpo = &cpo
+setlocal cpo&vim
 
 function! nuxtex#qfmake#allow() abort
   " Does not allow error message parser
@@ -486,4 +491,7 @@ function! s:is_str_equal(str, pattern) abort
   let l:list = matchstrpos(a:str, a:pattern)
   return (!l:list[1]) && (l:list[2] == len(a:str)) && (a:pattern != '')
 endfunc
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
