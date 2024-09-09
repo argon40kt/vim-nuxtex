@@ -1,0 +1,199 @@
+\section{OPTIONS}
+
+\begin{verbatim*}
+b:nuxtex_makeprg				*b:nuxtex_makeprg*
+	Type: string
+	This value defines the compiler command to execute if the compiler
+	plugin selected as nuxtex. This is similar as |g:nuxtex_makeprg|.
+
+g:nuxtex_makeprg				*g:nuxtex_makeprg*
+
+	Type: string
+	This value defines the compiler command to execute if the compiler
+	plugin selected as nuxtex. This parameter should be set before execute
+	`:compiler nuxtex`.
+
+	Example:
+>
+		let g:nuxtex_makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
+<
+	This example for using latexmk to compile `latex` command, convert dvi
+	by `dvipdfmx` and use `bibtex`.
+	See also |nuxtex-set-compiler|.
+
+b:nuxtex_output_pdf				*b:nuxtex_output_pdf*
+	Type: string
+	This value is user manual configuration of  output pdf file generated
+	from the (La)TeX source. This value is buffer variable, so it should
+	be set on the buffer opened the (La)TeX source you would like to
+	check the output.
+
+	Example:
+>
+		let b:nuxtex_output_pdf = '/path/to/foo/bar.pdf'
+<
+
+g:nuxtex_force_quickfix				*g:nuxtex_force_quickfix*
+	Type: boolean
+	Default: |v:false|
+	This value activate NuxTeX quickfix feature forcibly even if any
+	compiler plugin selected. This plugin detect compiler plugin set for
+	it for the buffer in the |QuickFixCmdPre| timing. So user or other
+	plugins select other buffer in the timing, NuxTeX cannot detect the
+	target buffer set as `:compiler nuxtex` in past.
+	It is useful for in this case, but it is not recommended to set the
+	parameter. Set `let g:nuxtex_force_quickfix = v:true` to activate
+	this feature.
+
+g:nuxtex_gz_parse				*g:nuxtex_gz_parse*
+	Type: boolean
+	Default: |v:true|
+	This variable activate or deactivate *.synctex.gz file parse for
+	Forward search feature. If this variable set as |v:true| and `gzip`
+	command is installed in the $PATH, this plugin will analyze
+	*.synctex.gz file when Forward search command is executed and choose
+	correct *.synctex.gz file generated from the (La)TeX source. This is
+	useful for there are multiple *.synctex.gz files are in the directory
+	by some reasons.
+	If there are any reasons, it is recommended to set no configuration
+	for the parameter. If you would like to set this parameter as |v:true|
+	but `gzip` command has not been installe in the $PATH, you can set
+	|g:nuxtex_gzip_path|.
+	See also |nuxtex-synctex|.
+
+g:nuxtex_gzip_path				*g:nuxtex_gzip_path*
+	Type: string
+	It is possible to set the `gzip` command path by setting this variable.
+	It is useful if |g:nuxtex_gz_parse| is set as v:true, but `gzip`
+	command is not installed in the $PATH.
+
+	Example:
+>
+	let g:nuxtex_gzip_path = '/usr/local/bin/gzip'
+<
+
+g:nuxtex_open_method				*g:nuxtex_open_method*
+	Type: char
+	Default: 't'
+	This variable for configure the rule for manipulating the buffer not
+	opened in any windows (but stored in the buffer) when the Backward
+	search function executed.
+	The default value is 't' and it means it will open the stored buffer
+	in the new tab when the Backward feature select the buffer called from
+	pdf viewer.
+	This variable can be set as below.
+
+'t'	Open stored buffer in the new tab.
+
+'h'	Split the currrent window and open stored buffer in the left hand side
+	of the current window.
+
+'j'	Vertical split the currrent window and open the stored buffer in the
+	below of the current window.
+
+'k'	Split the currrent window and open stored buffer in the right hand side
+	of the current window.
+
+'l'	Vertical split the current window and open the stored buffer in the
+	above side of the current window.
+
+'H'	Open the new window in the left side of the current tab and display
+	the stored buffer.
+
+'J'	Open the new window in the bottom of the current tab and display the
+	stored buffer.
+
+'K'	Open the new window in the top of the current tab and display the
+	stored buffer.
+
+'L'	Open the new window in the right side of the current tab and display
+	the stored buffer.
+
+'c'	Open the stored buffer in the current window.
+
+g:nuxtex_python_cmd				*g:nuxtex_python_cmd*
+	Type: string
+	Default: 'python3'
+	This variable is for to configure the path and execution file name
+	of the python. The plugin use python and some libraries to execute
+	SyncTeX feature. So it should be set as correct python command to
+	execute the feature.
+
+	Example:
+>
+	let g:nuxtex_python_cmd = '/usr/local/bin/python'
+<
+
+g:nuxtex_sys_enc				*g:nuxtex_sys_enc*
+	Type: string
+	This variable is used in analyzing *.synctex.gz file. It defines `gzip`
+	command stdout |encoding|. NuxTeX will convert the stdout |encoding|
+	from this variable to editor defined |&enc|. This feature stands on
+	|iconv()|.
+
+	Example:
+>
+	let g:nuxtex_sys_enc = "utf-8"
+>
+
+g:nuxtex_viewer_type				*g:nuxtex_viewer_type*
+	Type: string
+	Default: 'evince'
+	This variable is used for select pdf viewer used in SyncTeX feature.
+	It is possible to select from 'evince', 'atril', 'xreader' and
+	'zathura'. If it is not selected, GNOME Document Viewer (Evince) will
+	be used in the plugin default.
+	See also |nuxtex-synctex|.
+
+	Example:
+>
+	" Select pdf viewer as GNOME Document Viewer (Evince)
+	let g:nuxtex_viewer_type = 'evince'
+
+	" Select pdf viewer as Atril (Default viewer of MATE Desktop)
+	let g:nuxtex_viewer_type = 'atril'
+
+	" Select pdf viewer as Xreader (Default viewer of Linux Mint Cinnamon)
+	let g:nuxtex_viewer_type = 'xreader'
+
+	" Select pdf viewer as Zathura (It has Vim like keybind)
+	let g:nuxtex_viewer_type = 'zathura'
+>
+
+g:nuxtex_zathura_cmd				*g:nuxtex_zathura_cmd*
+	Type: string
+	Default: 'zathura'
+	This valiable defines the path and execution file name of the zathura.
+	It is useful for if you would like to use zathura not installed in the
+	\$PATH. It is only activated if |g:nuxtex_viewer_type| is set as
+	'zathura'.
+
+	Example:
+>
+	let g:nuxtex_zathura_cmd = '/usr/local/bin/zathura'
+<
+
+g:nuxtex_zathura_opt				*g:nuxtex_zathura_opt*
+	Type: string
+	Default: '--synctex-forward "@line:@col:@tex" "@pdf"'
+	This variable defines the zathura command option for Forward search
+	feature. The below strings will be substituted in the command.
+
+- '@line' will be replaced in the current buffer line number.
+- '@col' will be replaced in the current buffer column number.
+- '@tex' will be replaced in the current buffer file name.
+- '@pdf' will be replaced in the (La)TeX output pdf file name found in the
+         logic described in |nuxtex-synctex|.
+
+	For example, in case of |g:nuxtex_zathura_cmd| set as 'zathura', this
+	variable set as '--synctex-forward "@line:@col:@tex" "@pdf"', the
+	cursor position is 100 line and 5 column of the 'foo.tex' and the
+	output pdf file is '/path/to/foo.pdf', the plugin will execute command
+	as below.
+>
+	zathura --synctex-forward "100:5:foo.tex" "/path/to/foo.pdf"
+<
+
+	This variable is used in if |g:nuxtex_viewer_type| set as 'zathura'.
+\end{verbatim*}
+
