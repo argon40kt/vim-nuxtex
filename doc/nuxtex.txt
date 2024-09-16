@@ -565,6 +565,13 @@ Mappings					*nuxtex-map*
 ==============================================================================
 CHANGELOG ~					*nuxtex-changelog*
 
+0.2		2024/9/16
+		- GNU make feature `make -C` and sub-make support added.
+		- Bug under specific file name was fixed (both quickfix and
+		synctex).
+		- Bug fix which some compiler error/warning message not including
+		line number cannot list for quick fix.
+
 0.1		2024/3/10
 		First release
 

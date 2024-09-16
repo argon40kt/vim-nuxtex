@@ -1,3 +1,9 @@
+" vim-nuxtex is a LaTeX quickfix and SyncTeX plugin for Vim/Neovim on Linux
+" Developper: Kenichi Takizawa
+" License: MIT
+
+let s:save_cpo = &cpo
+setlocal cpo&vim
 
 let s:script_directory = expand('<sfile>:p:h')
 
@@ -158,4 +164,7 @@ function s:cursor_travel(file, line, col) abort
 		echo a:file . ', ' . a:line . ':' . a:col . ' is not stored in buffer.'
 	endif
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 

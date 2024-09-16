@@ -1,3 +1,9 @@
+" vim-nuxtex is a LaTeX quickfix and SyncTeX plugin for Vim/Neovim on Linux
+" Developper: Kenichi Takizawa
+" License: MIT
+
+let s:save_cpo = &cpo
+setlocal cpo&vim
 
 function nuxtex#fwd#check_to_pdf() abort
 	let l:files = s:get_outputfile()
@@ -108,12 +114,12 @@ function s:get_outputfile() abort
 
 		" Search all synctex.gz file on the directory.
 		for l:synctex_gz_file in l:synctex_gz
-			echo shellescape(l:synctex_gz_file) . "\n"
+			"echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
 				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . shellescape(l:synctex_gz_file)), g:nuxtex_sys_enc, &enc), '\n')
-				echo &enc . "\n"
+				"echo &enc . "\n"
 			endif
 
 			" Reading synctex.gz file.
@@ -137,7 +143,7 @@ function s:get_outputfile() abort
 					let l:idx += 1
 				endwhile
 				"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
-				echo l:tex_src_native
+				"echo l:tex_src_native
 				let l:tex_src_input = simplify(l:tex_src_native)
 				if has('win32')
 					let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
@@ -345,4 +351,7 @@ function s:modify_pdf_cmd(input_src, output_pdf) abort
 
 	return l:fwd_cmd
 endfunction
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
