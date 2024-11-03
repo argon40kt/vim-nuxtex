@@ -106,7 +106,7 @@ function s:get_outputfile() abort
 
 	let l:old_dir = getcwd()
 
-	exe 'lcd ' . fnamemodify(l:root_exists, ':p:h')
+	call chdir(fnamemodify(l:root_exists, ':p:h'))
 	" Search synctex.gz file recurcively.
 	while strchars(getcwd()) > 3
 		let l:synctex_gz = glob(getcwd() . '/*.synctex.gz', '', v:true)
@@ -153,16 +153,16 @@ function s:get_outputfile() abort
 
 					let l:synctex_file = fnamemodify(l:synctex_gz_file, ":p:r")
 					let l:output_pdf = fnamemodify(l:synctex_file, ":p:r") . '.pdf'
-					exe 'lcd ' .  l:old_dir
+					call chdir(l:old_dir)
 					return {'src' : l:tex_src_input, 'pdf' : l:output_pdf}
 				endif
 			endfor
 		endfor
 
-		lcd ../
+		call chdir('../')
 	endwhile
 
-	exe 'lcd ' .  l:old_dir
+	call chdir(l:old_dir)
 
 	echo '.synctex.gz file of ' . l:input_src . ' was not found in source directory and parent directories.' |
 	\ echo 'If you use -synctex=1 option in compile, you can set "b:nuxtex_output_pdf".'
@@ -235,10 +235,10 @@ endfunction
 function s:modify_src_path(root_file, current_src, Line) abort
 	let l:old_dir = getcwd()
 	" Change directory to current source file.
-	exe 'lcd ' . fnamemodify(a:current_src, ':p:h')
+	call chdir(fnamemodify(a:current_src, ':p:h'))
 	" Get full path of root file.
 	let l:root_file = fnamemodify(a:root_file, ':p')
-	exe 'lcd ' . l:old_dir
+	call chdir(l:old_dir)
 	if filereadable(l:root_file)
 		return l:root_file
 	else
