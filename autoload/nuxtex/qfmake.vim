@@ -211,6 +211,8 @@ function! s:tree(file_search, dir) abort
 " Construct skip algrithm from base skip rule
   let l:s4x_qf_skp2 = deepcopy(l:s4x_qf_skp1)
   let l:s4x_qf_skp2['mode_start_con'] = ['\\openout']
+  let l:s4x_qf_skp3 = deepcopy(l:s4x_qf_skp1)
+  let l:s4x_qf_skp3['mode_start_con'] = ['>warning:', '\s\+', 'kpathsea:', '\s\+']
 
 " File path getting function definition
   let l:s4x_qf_cat_file = {'file_status': function("s:file_status"),
@@ -280,6 +282,7 @@ function! s:tree(file_search, dir) abort
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
+      call l:s4x_qf_skp3['qf_mode']('')
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
@@ -301,6 +304,7 @@ function! s:tree(file_search, dir) abort
       endif
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
+      call l:s4x_qf_skp3['qf_mode']('')
       call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
       call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
@@ -407,6 +411,7 @@ function! s:qf_mode(fpath) dict
     "let self['s4x_qf_cat_line']['cat_start_con_idx'] = 0
     "let self['s4x_qf_cat_line']['s4x_cat_fin']['msg'] = ''
     let self['s4x_mode_fin']['cat_fin_con_idx'] = 0
+    let self['mode_start_con_idx'] = 0
   endif
 
   " Get the results of err/warn message and line no
