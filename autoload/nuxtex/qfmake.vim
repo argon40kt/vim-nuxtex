@@ -117,7 +117,7 @@ function! s:preprocesser() dict
     "let g:text .= l:qflist[l:index].text . "\n"
     let l:index = l:index + 1
   endwhile
-  "let g:list = s:list
+  let g:list = s:list
 endfunc
 
 let s:qf_object = {
@@ -211,6 +211,8 @@ function! s:tree(file_search, dir) abort
 " Construct skip algrithm from base skip rule
   let l:s4x_qf_skp2 = deepcopy(l:s4x_qf_skp1)
   let l:s4x_qf_skp2['mode_start_con'] = ['\\openout']
+  let l:s4x_qf_skp3 = deepcopy(l:s4x_qf_skp1)
+  let l:s4x_qf_skp3['mode_start_con'] = ['>warning:', '\s\+', 'kpathsea:', '\s\+']
 
 " File path getting function definition
   let l:s4x_qf_cat_file = {'file_status': function("s:file_status"),
