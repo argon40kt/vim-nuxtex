@@ -136,17 +136,21 @@ function! s:tree_monitor() abort
   let s:status = {'not_start': 0, 'start': 1, 'finish': 2}
   let s:idx = 0
   let s:mode = s:status['not_start']
+  let s:old_dir = []
+  let l:old_dir = getcwd()
 " Execute tree() analysis while all phrase analysis has not been done.
   while v:true
-    call s:tree(v:false, '')
+    call s:tree()
     if s:idx >= len(s:list) - 1
       return
     endif
     let s:idx += 1
   endwhile
+  " Go back to working directory
+  call chdir(l:old_dir)
 endfunc
 
-function! s:tree(file_search, dir) abort
+function! s:tree() abort
 " Define class (Dictionary(function))
   let l:s4x_qf_cat_fin_dict = {'qf_cat_fin_status': function("s:qf_cat_fin_status"),
 		\	'cat_fin_con': [],
@@ -232,6 +236,7 @@ function! s:tree(file_search, dir) abort
 		\	's4x_cat_fin': deepcopy(l:s4x_qf_cat_fin_dict),
 		\	'msg': ''}
   let l:s4x_qf_sub_make = {'sub_make_status': function("s:sub_make_status"),
+	  	\	'sub_make_io': function("s:sub_make_in"),
 	  	\	'sub_make_cat': deepcopy(l:s4x_qf_cat_dict)}
 
 " Directory getting function definition
@@ -248,38 +253,24 @@ function! s:tree(file_search, dir) abort
   let l:sub_make_out['sub_make_cat']['cat_start_con'] = [
 	\  'make[', '[0-9]\+', ']:', '\s\+',
 	\  'Leaving', '\s\+', 'directory', '\s\+']
+  let l:sub_make_out['sub_make_io'] = function("s:sub_make_out")
   let l:make_C_out['sub_make_cat']['cat_start_con'] = [
 	\  'make:', '\s\+', 'Leaving', '\s\+', 'directory', '\s\+']
+  let l:make_C_out['sub_make_io'] = function("s:sub_make_out")
 
   let l:sub_make_in['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
   let l:make_C_in['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
   let l:sub_make_out['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
   let l:make_C_out['sub_make_cat']['s4x_cat_fin']['cat_fin_con'] = ["\n"]
 
-  " For adding directory path prefix
-  if a:file_search
-    if a:dir == ''
-      let l:s4x_qf_file['file'] = ''
-    else
-      let l:s4x_qf_file['file'] = a:dir . '/'
-    endif
-  else
-    let l:s4x_qf_file['mode_status'] = s:status['not_start']
-  endif
-  let l:list = ['']
   " Main loop
   while v:true
     if l:s4x_qf_file['file_status']()
     elseif s:mode
-      let l:list[0] = s:list[s:idx]
-      if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
-        call s:tree(v:false, l:list[0])
-      elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
-	  "echo "exit\n"
-          return
-	endif
-      endif
+      call l:sub_make_in['sub_make_status']()
+      call l:make_C_in['sub_make_status']()
+      call l:sub_make_out['sub_make_status']()
+      call l:make_C_out['sub_make_status']()
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
       call l:s4x_qf_skp3['qf_mode']('')
@@ -289,19 +280,14 @@ function! s:tree(file_search, dir) abort
       call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
     elseif trim(s:list[s:idx]) == '('
       let s:idx += 1
-      call s:tree(v:true, a:dir)
+      call s:tree()
     elseif trim(s:list[s:idx]) == ')'
       return
     else
-      let l:list[0] = s:list[s:idx]
-      if l:sub_make_in['sub_make_status'](l:list) || l:make_C_in['sub_make_status'](l:list)
-        call s:tree(v:false, l:list[0])
-      elseif l:sub_make_out['sub_make_status'](l:list) || l:make_C_out['sub_make_status'](l:list)
-        if simplify(l:list[0] . '/') == simplify(a:dir . '/')
-	  "echo "exit\n"
-          return
-	endif
-      endif
+      call l:sub_make_in['sub_make_status']()
+      call l:make_C_in['sub_make_status']()
+      call l:sub_make_out['sub_make_status']()
+      call l:make_C_out['sub_make_status']()
       call l:s4x_qf_skp1['qf_mode']('')
       call l:s4x_qf_skp2['qf_mode']('')
       call l:s4x_qf_skp3['qf_mode']('')
@@ -471,8 +457,7 @@ function s:ltrim(list) abort
   "echo l:after
 endfunc
 
-function s:sub_make_status(list) dict
-  let l:list = a:list
+function s:sub_make_status() dict
   if !self['sub_make_cat']['cat_status'] && s:mode
     return 0
   endif
@@ -482,14 +467,34 @@ function s:sub_make_status(list) dict
     let self['sub_make_cat']['cat_status'] = 0
     let self['sub_make_cat']['cat_start_con_idx'] = 0
     let l:dir = self['sub_make_cat']['msg']
+    let l:list = ['']
     let l:list[0] = l:dir
     call s:ltrim(l:list)
+    call self['sub_make_io'](l:list)
     let s:mode = 0
     return 1
   elseif l:dir_status == 1
     let s:mode = 1
   endif
   return 0
+endfunc
+
+function s:sub_make_in(list) dict
+  let l:list = a:list
+  call insert(s:old_dir, chdir(l:list[0]))
+  echo getcwd()
+endfunc
+
+function s:sub_make_out(list) dict
+  if !len(s:old_dir)
+    return
+  endif
+  if simplify(a:list[0] . '/') == simplify(s:old_dir[0] . '/')
+    return
+  endif
+  "call chdir(s:old_dir[0])
+  call remove(s:old_dir, 0)
+  echo getcwd()
 endfunc
 
 function! s:is_str_equal(str, pattern) abort
