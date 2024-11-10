@@ -266,22 +266,10 @@ function! s:tree() abort
   " Main loop
   while v:true
     if l:s4x_qf_file['file_status']()
-    elseif s:mode
-      call l:sub_make_in['sub_make_status']()
-      call l:make_C_in['sub_make_status']()
-      call l:sub_make_out['sub_make_status']()
-      call l:make_C_out['sub_make_status']()
-      call l:s4x_qf_skp1['qf_mode']('')
-      call l:s4x_qf_skp2['qf_mode']('')
-      call l:s4x_qf_skp3['qf_mode']('')
-      call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
-    elseif trim(s:list[s:idx]) == '('
+    elseif trim(s:list[s:idx]) == '(' && !s:mode
       let s:idx += 1
       call s:tree()
-    elseif trim(s:list[s:idx]) == ')'
+    elseif trim(s:list[s:idx]) == ')' && !s:mode
       return
     else
       call l:sub_make_in['sub_make_status']()
