@@ -108,7 +108,7 @@ endfunc
 function! s:preprocesser() dict
   let l:index = 0
   let l:qflist = self['getmsg']()
-  let s:list = []
+  let s:list = ["\n"]
   "let g:text = ''
   "let l:pattern = '\([()]\@1<=\|\ze[()]\)\|^!\zs\|[0-9]\([0-9]\)\@!\zs\|[^0-9]\([0-9]\)\@=\zs\|\s\S\@=\zs\|\S\s\@=\zs\|\ze\.\|\.\@1<='
   let l:pattern = '\([()]\@1<=\|\ze[()]\)\|^!\zs\|[0-9]\([0-9]\)\@!\zs\|[^0-9]\([0-9]\)\@=\zs\|\s\S\@=\zs\|\S\s\@=\zs\|\ze\.'
