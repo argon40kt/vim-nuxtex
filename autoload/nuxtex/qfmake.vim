@@ -457,11 +457,9 @@ function s:sub_make_status() dict
   if l:dir_status == 2
     let self['sub_make_cat']['cat_status'] = 0
     let self['sub_make_cat']['cat_start_con_idx'] = 0
-    let l:dir = self['sub_make_cat']['msg']
-    let l:list = ['']
-    let l:list[0] = l:dir
-    call s:ltrim(l:list)
-    call self['sub_make_io'](l:list)
+    let l:dir = [self['sub_make_cat']['msg']]
+    call s:ltrim(l:dir)
+    call self['sub_make_io'](l:dir)
     let s:mode = 0
     return 1
   elseif l:dir_status == 1
@@ -471,8 +469,7 @@ function s:sub_make_status() dict
 endfunc
 
 function s:sub_make_in(list) dict
-  let l:list = a:list
-  call insert(s:old_dir, chdir(l:list[0]))
+  call insert(s:old_dir, chdir(a:list[0]))
   "echo getcwd()
 endfunc
 
