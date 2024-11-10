@@ -319,6 +319,9 @@ function! s:file_status() dict
     else
       let self['file'] .= s:list[s:idx]
       if filereadable(self['file'])
+        if !isabsolutepath(self['file'])
+          let self['file'] = simplify(getcwd() . '/' . self['file'])
+        endif
         " Finish file search mode because file has been found
         let self['mode_status'] = s:status['not_start']
         let s:mode = s:status['not_start']
@@ -482,7 +485,7 @@ endfunc
 function s:sub_make_in(list) dict
   let l:list = a:list
   call insert(s:old_dir, chdir(l:list[0]))
-  echo getcwd()
+  "echo getcwd()
 endfunc
 
 function s:sub_make_out(list) dict
@@ -492,9 +495,9 @@ function s:sub_make_out(list) dict
   if simplify(a:list[0] . '/') == simplify(s:old_dir[0] . '/')
     return
   endif
-  "call chdir(s:old_dir[0])
+  call chdir(s:old_dir[0])
   call remove(s:old_dir, 0)
-  echo getcwd()
+  "echo getcwd()
 endfunc
 
 function! s:is_str_equal(str, pattern) abort
