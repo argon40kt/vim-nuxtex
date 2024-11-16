@@ -171,66 +171,92 @@ function s:get_outputfile() abort
 endfunction
 
 function s:tex_root() abort
-	let l:detect_src_list = [['%', '!', 'TeX', ' ', 'root', '='],
-				\['%', '!', 'TEX', ' ', 'root', '=']]
-	" '%! ... ' will be ignored.
-	let l:detect_th_list = [2, 2]
-
 	let l:current_src = expand("%:p")
 	let l:line_num = 1
-	while l:line_num != line('$') + 1
-		let l:detect_th_idx = 0
-		for l:detect_src in l:detect_src_list
-			let l:detect_th = l:detect_th_list[l:detect_th_idx]
-			let l:detect_th_idx += 1
-
-			let l:detect_max = len(l:detect_src)
-			let l:detect_idx = 0
-			let l:mode = l:detect_src[l:detect_idx]
-
-			let l:Line = trim(getline(l:line_num))
-			let l:length = strchars(l:Line)
-			let l:src_col = 0
-			while l:src_col < l:length
-				if l:mode == ''
-					let l:modelen = 1
-				else
-					let l:modelen = strchars(l:mode)
-				endif
-				let l:char = strcharpart(l:Line, l:src_col, l:modelen)
-				" echo l:mode . ') [' . l:char . '] ' . l:detect_idx |
-				"Initial of current phrase.
-				let l:topchar = strcharpart(l:char, 0, 1)
-				let l:white_char = l:topchar != ' ' && l:topchar != '	'
-				if l:detect_idx == l:detect_max && l:white_char
-					" %!TeX root = exists on the top of source.
-					let l:root_path = strcharpart(l:Line, l:src_col)
-					return s:modify_src_path(l:root_path, l:current_src, l:Line)
-				elseif l:topchar != strcharpart(l:mode, 0, 1) && l:white_char
-					if l:detect_idx == l:detect_th
-						" There are %! but not %!TeX root =.
-						break
-					endif
-					" There are not %!TeX root = in top of source.
-					return l:current_src
-				elseif l:char == l:mode
-					" Check next phrase.
-					let l:detect_idx += 1
-					let l:mode = get(l:detect_src, l:detect_idx, '')
-					" Skip current phrase.
-					let l:src_col += l:modelen - 1
-				endif
-				let l:src_col += 1
-			endwhile
-		endfor
-
-		"Exit this function if %!TeX root = is not complete.
-		"if l:detect_idx < l:detect_max && l:detect_idx > l:detect_th
-		"	return l:current_src
-		"endif
+	while l:line_num < line('$') + 1
+		let l:Line = trim(getline(l:line_num))
+		if match(l:Line, '\s*%')
+			" This line is not comment out.
+			" So, return current source path.
+			return l:current_src
+		endif
+		let l:tex_root = matchstrpos(l:Line, '\s*%\s*!\s*\(tex\)\c\s\+\(root\)\c\s*=')
+		if !l:tex_root[1]
+		" Found %!TeX root = ...
+			let l:root_path = trim(strcharpart(l:Line, strchars(l:tex_root[0])))
+			if !match(l:root_path, "'")
+				" TO DO: use ltrim() instead of trim()
+				let l:root_path = trim(l:root_path, "'")
+			elseif !match(l:root_path, '"')
+				" TO DO: use ltrim() instead of trim()
+				let l:root_path = trim(l:root_path, '"')
+			endif
+			return s:modify_src_path(l:root_path, l:current_src, l:Line)
+		endif
 		let l:line_num += 1
 	endwhile
 endfunction
+"function s:tex_root() abort
+"	let l:detect_src_list = [['%', '!', 'TeX', ' ', 'root', '='],
+"				\['%', '!', 'TEX', ' ', 'root', '=']]
+"	" '%! ... ' will be ignored.
+"	let l:detect_th_list = [2, 2]
+"
+"	let l:current_src = expand("%:p")
+"	let l:line_num = 1
+"	while l:line_num != line('$') + 1
+"		let l:detect_th_idx = 0
+"		for l:detect_src in l:detect_src_list
+"			let l:detect_th = l:detect_th_list[l:detect_th_idx]
+"			let l:detect_th_idx += 1
+"
+"			let l:detect_max = len(l:detect_src)
+"			let l:detect_idx = 0
+"			let l:mode = l:detect_src[l:detect_idx]
+"
+"			let l:Line = trim(getline(l:line_num))
+"			let l:length = strchars(l:Line)
+"			let l:src_col = 0
+"			while l:src_col < l:length
+"				if l:mode == ''
+"					let l:modelen = 1
+"				else
+"					let l:modelen = strchars(l:mode)
+"				endif
+"				let l:char = strcharpart(l:Line, l:src_col, l:modelen)
+"				" echo l:mode . ') [' . l:char . '] ' . l:detect_idx |
+"				"Initial of current phrase.
+"				let l:topchar = strcharpart(l:char, 0, 1)
+"				let l:white_char = l:topchar != ' ' && l:topchar != '	'
+"				if l:detect_idx == l:detect_max && l:white_char
+"					" %!TeX root = exists on the top of source.
+"					let l:root_path = strcharpart(l:Line, l:src_col)
+"					return s:modify_src_path(l:root_path, l:current_src, l:Line)
+"				elseif l:topchar != strcharpart(l:mode, 0, 1) && l:white_char
+"					if l:detect_idx == l:detect_th
+"						" There are %! but not %!TeX root =.
+"						break
+"					endif
+"					" There are not %!TeX root = in top of source.
+"					return l:current_src
+"				elseif l:char == l:mode
+"					" Check next phrase.
+"					let l:detect_idx += 1
+"					let l:mode = get(l:detect_src, l:detect_idx, '')
+"					" Skip current phrase.
+"					let l:src_col += l:modelen - 1
+"				endif
+"				let l:src_col += 1
+"			endwhile
+"		endfor
+"
+"		"Exit this function if %!TeX root = is not complete.
+"		"if l:detect_idx < l:detect_max && l:detect_idx > l:detect_th
+"		"	return l:current_src
+"		"endif
+"		let l:line_num += 1
+"	endwhile
+"endfunction
 
 function s:modify_src_path(root_file, current_src, Line) abort
 	let l:old_dir = getcwd()
