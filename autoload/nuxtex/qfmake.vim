@@ -266,22 +266,10 @@ function! s:tree() abort
   " Main loop
   while v:true
     if l:s4x_qf_file['file_status']()
-    elseif s:mode
-      call l:sub_make_in['sub_make_status']()
-      call l:make_C_in['sub_make_status']()
-      call l:sub_make_out['sub_make_status']()
-      call l:make_C_out['sub_make_status']()
-      call l:s4x_qf_skp1['qf_mode']('')
-      call l:s4x_qf_skp2['qf_mode']('')
-      call l:s4x_qf_skp3['qf_mode']('')
-      call l:s4x_qf_err['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_overfull['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_warn['qf_mode'](l:s4x_qf_file['file'])
-      call l:s4x_qf_fwrn['qf_mode'](l:s4x_qf_file['file'])
-    elseif trim(s:list[s:idx]) == '('
+    elseif trim(s:list[s:idx]) == '(' && !s:mode
       let s:idx += 1
       call s:tree()
-    elseif trim(s:list[s:idx]) == ')'
+    elseif trim(s:list[s:idx]) == ')' && !s:mode
       return
     else
       call l:sub_make_in['sub_make_status']()
@@ -469,11 +457,9 @@ function s:sub_make_status() dict
   if l:dir_status == 2
     let self['sub_make_cat']['cat_status'] = 0
     let self['sub_make_cat']['cat_start_con_idx'] = 0
-    let l:dir = self['sub_make_cat']['msg']
-    let l:list = ['']
-    let l:list[0] = l:dir
-    call s:ltrim(l:list)
-    call self['sub_make_io'](l:list)
+    let l:dir = [self['sub_make_cat']['msg']]
+    call s:ltrim(l:dir)
+    call self['sub_make_io'](l:dir)
     let s:mode = 0
     return 1
   elseif l:dir_status == 1
@@ -483,8 +469,7 @@ function s:sub_make_status() dict
 endfunc
 
 function s:sub_make_in(list) dict
-  let l:list = a:list
-  call insert(s:old_dir, chdir(l:list[0]))
+  call insert(s:old_dir, chdir(a:list[0]))
   "echo getcwd()
 endfunc
 
