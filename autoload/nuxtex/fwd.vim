@@ -111,7 +111,7 @@ function s:get_outputfile() abort
 	while strchars(getcwd()) > 3
 		" Search all synctex.gz file in the directory.
 		for l:synctex_gz_file in glob(getcwd() . '/*.synctex.gz', '', v:true)
-			echo shellescape(l:synctex_gz_file) . "\n"
+			"echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
@@ -146,7 +146,7 @@ function s:get_outputfile() abort
 
 	call chdir(l:old_dir)
 
-	echo '.synctex.gz file of ' . l:input_src . ' was not found in source directory and parent directories.' |
+	echo '.synctex.gz or uncompresssed .synctex file of ' . l:input_src . ' was not found in source directory and parent directories.' |
 	\ echo 'If you use -synctex=1 option in compile, you can set "b:nuxtex_output_pdf".'
 
 	return {'src' : l:input_src, 'pdf' : ''}
@@ -178,8 +178,6 @@ function s:read_synctex(synctex_line, input_src)
 			let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
 		endif
 
-		echo 'a:input_src: ' . a:input_src
-		echo 'l:tex_src_input: ' . l:tex_src_input
 		if simplify(a:input_src) == l:tex_src_input
 			return v:true
 		endif
