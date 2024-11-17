@@ -109,11 +109,8 @@ function s:get_outputfile() abort
 	call chdir(fnamemodify(l:root_exists, ':p:h'))
 	" Search synctex.gz file recurcively.
 	while strchars(getcwd()) > 3
-		let l:synctex_gz = glob(getcwd() . '/*.synctex.gz', '', v:true)
-		"echo getcwd() |
-
-		" Search all synctex.gz file on the directory.
-		for l:synctex_gz_file in l:synctex_gz
+		" Search all synctex.gz file in the directory.
+		for l:synctex_gz_file in glob(getcwd() . '/*.synctex.gz', '', v:true)
 			"echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
@@ -121,42 +118,27 @@ function s:get_outputfile() abort
 				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . shellescape(l:synctex_gz_file)), g:nuxtex_sys_enc, &enc), '\n')
 				"echo &enc . "\n"
 			endif
-
-			" Reading synctex.gz file.
-			for l:gzip_stdout_line in l:gzip_stdout
-				if match(l:gzip_stdout_line, "Input") != 0
-					continue
-				elseif match(l:gzip_stdout_line, "Output") == 0
-					break
-				endif
-
-				" Native source path described in synctex.gz.
-				let l:tex_src_list = split(l:gzip_stdout_line,':\zs')
-				let l:tex_src_native = ''
-				let l:idx = 2
-				while l:idx < len(l:tex_src_list)
-					let l:tex_src_part = l:tex_src_list[l:idx]
-					if has('win32') && l:idx == 2
-						let l:tex_src_part = toupper(l:tex_src_part)
-					endif
-					let l:tex_src_native .= l:tex_src_part
+			if s:read_synctex(l:gzip_stdout, l:input_src)
+				let l:output_pdf = fnamemodify(l:synctex_gz_file, ":p:r:r") . '.pdf'
+				call chdir(l:old_dir)
+				return {'src' : l:input_src, 'pdf' : l:output_pdf}
+			endif
+		endfor
+		" Search all synctex file in the directory.
+		for l:synctex_file in glob(getcwd() . '/*.synctex', '', v:true)
+			let l:synctex_read = readfile(l:synctex_file)
+			if has('iconv') && exists('g:nuxtex_sys_enc')
+				let l:idx = 0
+				while l:idx < len(l:synctex_read)
+					let l:synctex_read[l:idx] = iconv(l:synctex_read[l:idx], g:nuxtex_sys_enc, &enc)
 					let l:idx += 1
 				endwhile
-				"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
-				"echo l:tex_src_native
-				let l:tex_src_input = simplify(l:tex_src_native)
-				if has('win32')
-					let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
-				endif
-
-				if simplify(l:input_src) == l:tex_src_input
-
-					let l:synctex_file = fnamemodify(l:synctex_gz_file, ":p:r")
-					let l:output_pdf = fnamemodify(l:synctex_file, ":p:r") . '.pdf'
-					call chdir(l:old_dir)
-					return {'src' : l:tex_src_input, 'pdf' : l:output_pdf}
-				endif
-			endfor
+			endif
+			if s:read_synctex(l:synctex_read, l:input_src)
+				let l:output_pdf = fnamemodify(l:synctex_file, ":p:r") . '.pdf'
+				call chdir(l:old_dir)
+				return {'src' : l:input_src, 'pdf' : l:output_pdf}
+			endif
 		endfor
 
 		call chdir('../')
@@ -164,10 +146,43 @@ function s:get_outputfile() abort
 
 	call chdir(l:old_dir)
 
-	echo '.synctex.gz file of ' . l:input_src . ' was not found in source directory and parent directories.' |
+	echo '.synctex.gz or uncompresssed .synctex file of ' . l:input_src . ' was not found in source directory and parent directories.' |
 	\ echo 'If you use -synctex=1 option in compile, you can set "b:nuxtex_output_pdf".'
 
 	return {'src' : l:input_src, 'pdf' : ''}
+endfunction
+
+function s:read_synctex(synctex_line, input_src)
+	" Reading synctex.gz file.
+	for l:gzip_stdout_line in a:synctex_line
+		if match(l:gzip_stdout_line, "Input") != 0
+			continue
+		endif
+
+		" Native source path described in synctex.gz.
+		let l:tex_src_list = split(l:gzip_stdout_line,':\zs')
+		let l:tex_src_native = ''
+		let l:idx = 2
+		while l:idx < len(l:tex_src_list)
+			let l:tex_src_part = l:tex_src_list[l:idx]
+			if has('win32') && l:idx == 2
+				let l:tex_src_part = toupper(l:tex_src_part)
+			endif
+			let l:tex_src_native .= l:tex_src_part
+			let l:idx += 1
+		endwhile
+		"let l:tex_src_native = split(l:gzip_stdout_line,':')[2]
+		"echo l:tex_src_native
+		let l:tex_src_input = simplify(l:tex_src_native)
+		if has('win32')
+			let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
+		endif
+
+		if simplify(a:input_src) == l:tex_src_input
+			return v:true
+		endif
+	endfor
+	return v:false
 endfunction
 
 function s:tex_root() abort
