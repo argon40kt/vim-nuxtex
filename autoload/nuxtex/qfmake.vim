@@ -307,9 +307,7 @@ function! s:file_status() dict
     else
       let self['file'] .= s:list[s:idx]
       if filereadable(self['file'])
-        if !isabsolutepath(self['file'])
-          let self['file'] = simplify(getcwd() . '/' . self['file'])
-        endif
+        let self['file'] = fnamemodify(self['file'], ':p')
         " Finish file search mode because file has been found
         let self['mode_status'] = s:status['not_start']
         let s:mode = s:status['not_start']
@@ -487,7 +485,7 @@ endfunc
 
 function! s:is_str_equal(str, pattern) abort
   let l:list = matchstrpos(a:str, a:pattern)
-  return (!l:list[1]) && (l:list[2] == len(a:str)) && (a:pattern != '')
+  return (!l:list[1]) && (l:list[2] == strlen(a:str)) && (a:pattern != '')
 endfunc
 
 let &cpo = s:save_cpo
