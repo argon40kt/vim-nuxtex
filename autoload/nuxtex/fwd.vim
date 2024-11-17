@@ -109,7 +109,7 @@ function s:get_outputfile() abort
 	call chdir(fnamemodify(l:root_exists, ':p:h'))
 	" Search synctex.gz file recurcively.
 	while strchars(getcwd()) > 3
-		" Search all synctex.gz file on the directory.
+		" Search all synctex.gz file in the directory.
 		for l:synctex_gz_file in glob(getcwd() . '/*.synctex.gz', '', v:true)
 			"echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
@@ -121,7 +121,23 @@ function s:get_outputfile() abort
 			if s:read_synctex(l:gzip_stdout, l:input_src)
 				let l:output_pdf = fnamemodify(l:synctex_gz_file, ":p:r") . '.pdf'
 				call chdir(l:old_dir)
-				return {'src' : l:tex_src_input, 'pdf' : l:output_pdf}
+				return {'src' : l:input_src, 'pdf' : l:output_pdf}
+			endif
+		endfor
+		" Search all synctex file in the directory.
+		for l:synctex_file in glob(getcwd() . '/*.synctex', '', v:true)
+			let l:synctex_read = readfile(l:synctex_file)
+			if has('iconv') && exists('g:nuxtex_sys_enc')
+				let l:idx = 0
+				while l:idx < len(l:synctex_read)
+					let l:synctex_read[l:idx] = iconv(l:synctex_read[l:idx], g:nuxtex_sys_enc, &enc)
+					let l:idx += 1
+				endwhile
+			endif
+			if s:read_synctex(l:synctex_read, l:input_src)
+				let l:output_pdf = fnamemodify(l:synctex_file, ":p:r") . '.pdf'
+				call chdir(l:old_dir)
+				return {'src' : l:input_src, 'pdf' : l:output_pdf}
 			endif
 		endfor
 
