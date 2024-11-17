@@ -111,7 +111,7 @@ function s:get_outputfile() abort
 	while strchars(getcwd()) > 3
 		" Search all synctex.gz file in the directory.
 		for l:synctex_gz_file in glob(getcwd() . '/*.synctex.gz', '', v:true)
-			"echo shellescape(l:synctex_gz_file) . "\n"
+			echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
 			else
@@ -119,7 +119,7 @@ function s:get_outputfile() abort
 				"echo &enc . "\n"
 			endif
 			if s:read_synctex(l:gzip_stdout, l:input_src)
-				let l:output_pdf = fnamemodify(l:synctex_gz_file, ":p:r") . '.pdf'
+				let l:output_pdf = fnamemodify(l:synctex_gz_file, ":p:r:r") . '.pdf'
 				call chdir(l:old_dir)
 				return {'src' : l:input_src, 'pdf' : l:output_pdf}
 			endif
@@ -157,8 +157,6 @@ function s:read_synctex(synctex_line, input_src)
 	for l:gzip_stdout_line in a:synctex_line
 		if match(l:gzip_stdout_line, "Input") != 0
 			continue
-		elseif match(l:gzip_stdout_line, "Output") == 0
-			break
 		endif
 
 		" Native source path described in synctex.gz.
@@ -180,12 +178,13 @@ function s:read_synctex(synctex_line, input_src)
 			let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
 		endif
 
+		echo 'a:input_src: ' . a:input_src
+		echo 'l:tex_src_input: ' . l:tex_src_input
 		if simplify(a:input_src) == l:tex_src_input
 			return v:true
-		else
-			return v:false
 		endif
 	endfor
+	return v:false
 endfunction
 
 function s:tex_root() abort
