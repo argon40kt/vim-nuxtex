@@ -109,11 +109,8 @@ function s:get_outputfile() abort
 	call chdir(fnamemodify(l:root_exists, ':p:h'))
 	" Search synctex.gz file recurcively.
 	while strchars(getcwd()) > 3
-		let l:synctex_gz = glob(getcwd() . '/*.synctex.gz', '', v:true)
-		"echo getcwd() |
-
 		" Search all synctex.gz file on the directory.
-		for l:synctex_gz_file in l:synctex_gz
+		for l:synctex_gz_file in glob(getcwd() . '/*.synctex.gz', '', v:true)
 			"echo shellescape(l:synctex_gz_file) . "\n"
 			if !has('iconv') || !exists('g:nuxtex_sys_enc')
 				let l:gzip_stdout = systemlist(l:gzip_cmd . shellescape(l:synctex_gz_file))
@@ -121,7 +118,11 @@ function s:get_outputfile() abort
 				let l:gzip_stdout = split(iconv(system(l:gzip_cmd . shellescape(l:synctex_gz_file)), g:nuxtex_sys_enc, &enc), '\n')
 				"echo &enc . "\n"
 			endif
-			call s:read_synctex(l:gzip_stdout)
+			if s:read_synctex(l:gzip_stdout, l:input_src)
+				let l:output_pdf = fnamemodify(l:synctex_gz_file, ":p:r") . '.pdf'
+				call chdir(l:old_dir)
+				return {'src' : l:tex_src_input, 'pdf' : l:output_pdf}
+			endif
 		endfor
 
 		call chdir('../')
@@ -135,7 +136,7 @@ function s:get_outputfile() abort
 	return {'src' : l:input_src, 'pdf' : ''}
 endfunction
 
-function s:read_synctex(synctex_line)
+function s:read_synctex(synctex_line, input_src)
 	" Reading synctex.gz file.
 	for l:gzip_stdout_line in a:synctex_line
 		if match(l:gzip_stdout_line, "Input") != 0
@@ -163,12 +164,10 @@ function s:read_synctex(synctex_line)
 			let l:tex_src_input = substitute(l:tex_src_input, '/', '\', 'g')
 		endif
 
-		if simplify(l:input_src) == l:tex_src_input
-
-			let l:synctex_file = fnamemodify(l:synctex_gz_file, ":p:r")
-			let l:output_pdf = fnamemodify(l:synctex_file, ":p:r") . '.pdf'
-			call chdir(l:old_dir)
-			return {'src' : l:tex_src_input, 'pdf' : l:output_pdf}
+		if simplify(a:input_src) == l:tex_src_input
+			return v:true
+		else
+			return v:false
 		endif
 	endfor
 endfunction
