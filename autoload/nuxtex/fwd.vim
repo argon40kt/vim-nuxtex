@@ -175,7 +175,8 @@ function s:tex_root() abort
 	let l:line_num = 1
 	while l:line_num < line('$') + 1
 		let l:Line = getline(l:line_num)
-		if match(l:Line, '\s*%')
+		let l:is_comment = matchstrpos(l:Line, '\s*\(%.*\)\=')
+		if l:is_comment[1] || l:is_comment[2] != strlen(l:Line)
 			" This line is not comment out.
 			" So, return current source path.
 			return l:current_src
