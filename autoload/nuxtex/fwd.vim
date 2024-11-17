@@ -174,7 +174,7 @@ function s:tex_root() abort
 	let l:current_src = expand("%:p")
 	let l:line_num = 1
 	while l:line_num < line('$') + 1
-		let l:Line = trim(getline(l:line_num))
+		let l:Line = getline(l:line_num)
 		if match(l:Line, '\s*%')
 			" This line is not comment out.
 			" So, return current source path.
