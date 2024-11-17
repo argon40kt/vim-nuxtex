@@ -184,13 +184,13 @@ function s:tex_root() abort
 		if !l:tex_root[1]
 		" Found %!TeX root = ...
 			let l:root_path = trim(strcharpart(l:Line, strchars(l:tex_root[0])))
-			if !match(l:root_path, "'")
-				" TO DO: use ltrim() instead of trim()
-				let l:root_path = trim(l:root_path, "'")
-			elseif !match(l:root_path, '"')
-				" TO DO: use ltrim() instead of trim()
-				let l:root_path = trim(l:root_path, '"')
-			endif
+			"if !match(l:root_path, "'")
+			"	" TO DO: use ltrim() instead of trim()
+			"	let l:root_path = trim(l:root_path, "'")
+			"elseif !match(l:root_path, '"')
+			"	" TO DO: use ltrim() instead of trim()
+			"	let l:root_path = trim(l:root_path, '"')
+			"endif
 			return s:modify_src_path(l:root_path, l:current_src, l:Line)
 		endif
 		let l:line_num += 1
