@@ -138,10 +138,10 @@ generate pdf at one time, you can use latexmk.
 Example 4: Directly update |makeprg|.
 As described in above, |b:nuxtex_makeprg| and |b:nuxtex_makeprg| will update
 |makeprg| when `:compiler nuxtex` has been done. You can also update the
-compile method by directly update |makeprg|. In this method, you can update
-compiler after once `:compiler nuxtex` has been executed. You may edit some
-scripts if you would like to multiple compilers in multiple laungage without
-using |b:nuxtex_makeprg| or |g:nuxtex_makeprg|.
+compile method by directly update |makeprg|. In this method, you can overwrite
+|makeprg| manualy after once `:compiler nuxtex` has been executed. You may
+edit some scripts if you would like to multiple compilers in multiple laungage
+without using |b:nuxtex_makeprg| or |g:nuxtex_makeprg|.
 
 >
 	let &makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
