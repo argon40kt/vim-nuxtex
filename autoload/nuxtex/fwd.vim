@@ -86,11 +86,7 @@ function s:get_outputfile() abort
 	if !exists('g:nuxtex_gz_parse')
 		let g:nuxtex_gz_parse = v:true
 	endif
-	if g:nuxtex_gz_parse != v:true && g:nuxtex_gz_parse != v:false
-		echoerr 'Unknown option of g:nuxtex_gz_parse = "' . g:nuxtex_gz_parse . '"'
-		return {'src' : l:input_src, 'pdf' : ''}
-	endif
-	if !executable(l:gzip_cmd) || g:nuxtex_gz_parse == v:false
+	if !executable(l:gzip_cmd) || !g:nuxtex_gz_parse
 		let l:output_pdf = fnamemodify(l:root_exists, ':p:r') . '.pdf'
 		if filereadable(l:output_pdf)
 			return {'src' : l:input_src, 'pdf' : l:output_pdf}
@@ -311,7 +307,7 @@ function s:modify_pdf_cmd(input_src, output_pdf) abort
 	if !exists('g:nuxtex_syncsrc_escape')
 		let g:nuxtex_syncsrc_escape = v:true
 	endif
-	if g:nuxtex_syncsrc_escape != v:false
+	if g:nuxtex_syncsrc_escape
 		let l:input_src = shellescape(a:input_src)
 	else
 		let l:input_src = a:input_src
@@ -319,7 +315,7 @@ function s:modify_pdf_cmd(input_src, output_pdf) abort
 	if !exists('g:nuxtex_syncpdf_escape')
 		let g:nuxtex_syncpdf_escape = v:true
 	endif
-	if g:nuxtex_syncpdf_escape != v:false
+	if g:nuxtex_syncpdf_escape
 		let l:output_pdf = shellescape(a:output_pdf)
 	else
 		let l:output_pdf = a:output_pdf
