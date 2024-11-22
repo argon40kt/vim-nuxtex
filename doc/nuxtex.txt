@@ -82,8 +82,9 @@ execute these commands, you should set up the compilation method.
 There are some methods. I will explain some examples.
 
 Example 1: Use make shell command ~
-By default, |:make| command execute make shell command. You can also use this
-option on NuxTeX.
+By default, |:make| command execute make shell command. NuxTeX will set
+automatically `make` command as |makeprg| when `compiler[!] nuxtex` was
+executed if |b:nuxtex_makeprg| or |g:nuxtex_makeprg| was not set.
 In this case, you shoule prepare Makefile described compilation method.
 If you would like to compile the 'foo.tex' document by latex shell command,
 you should put the 'Makefile' file in the same directory of the 'foo.tex' and
