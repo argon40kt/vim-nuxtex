@@ -97,7 +97,7 @@ function s:get_outputfile() abort
 			return {'src' : l:input_src, 'pdf' : ''}
 		endif
 	else
-		let l:gzip_cmd = l:gzip_cmd . ' -cdk '
+		let l:gzip_cmd = shellescape(l:gzip_cmd) . ' -cdk '
 	endif
 
 	let l:old_dir = getcwd()
@@ -244,19 +244,36 @@ function s:synctex_cmd_collection() abort
 	\	g:nuxtex_viewer_type == 'atril' ||
 	\	g:nuxtex_viewer_type == 'xreader'
 		let l:viewer_native = g:nuxtex_python_cmd
-		let l:script = s:script_directory . '/fwdpy.py'
+		let l:script = shellescape(s:script_directory . '/fwdpy.py')
 		let l:viewer_opt = l:script . ' ' .
 			\	g:nuxtex_viewer_type .
 			\	' @line:@col:@tex @pdf'
 	else
 		echoerr 'Unknown type of viewer g:nuxtex_viewer_type = "' . g:nuxtex_viewer_type . '".'
-		return
+		return ''
 	endif
-
-	return l:viewer_native . ' ' . l:viewer_opt
+	if !executable(l:viewer_native)
+		echohl ErrorMsg
+		echo l:viewer_native . ' is not executable.' |
+		echo 'You should change settings of g:nuxtex_viewer_type or g:nuxtex_zathura_cmd.'
+		echohl None
+		return ''
+	endif
+	return shellescape(l:viewer_native) . ' ' . l:viewer_opt
 endfunction
 
-function s:synctex_extcmd_async(fwd_cmd) abort
+function s:exec_pdf_view(input_src, output_pdf) abort
+	let l:fwd_cmd = s:modify_pdf_cmd(a:input_src, a:output_pdf)
+	if l:fwd_cmd == ''
+		return
+	endif
+	"if s:chk_viewer_cmd(l:fwd_cmd) == v:false
+	"	return
+	"endif
+
+	"let l:fwd_cmd = substitute(l:fwd_cmd, '%', '\\%', 'g')
+	"let l:fwd_cmd = substitute(l:fwd_cmd, '#', '\\#', 'g')
+	"let l:fwd_cmd = substitute(l:fwd_cmd, '!', '\\!', 'g')
 	if has('win32')
 		let l:start_cmd = 'start cmd /s /c "start "" '
 		let l:fwd_cmd = l:start_cmd . a:fwd_cmd . '"'
@@ -266,41 +283,29 @@ function s:synctex_extcmd_async(fwd_cmd) abort
 	"silent exe '!' . l:fwd_cmd
 	call system(l:fwd_cmd)
 	redraw!
-endfunction
-
-function s:exec_pdf_view(input_src, output_pdf) abort
-	let l:fwd_cmd = s:modify_pdf_cmd(a:input_src, a:output_pdf)
-	if s:chk_viewer_cmd(l:fwd_cmd) == v:false
-		return
-	endif
-
-	"let l:fwd_cmd = substitute(l:fwd_cmd, '%', '\\%', 'g')
-	"let l:fwd_cmd = substitute(l:fwd_cmd, '#', '\\#', 'g')
-	"let l:fwd_cmd = substitute(l:fwd_cmd, '!', '\\!', 'g')
-	call s:synctex_extcmd_async(l:fwd_cmd)
 	"echo l:fwd_cmd
 endfunction
 
-function s:chk_viewer_cmd(fwd_cmd) abort
-	let l:cmd_part = trim(a:fwd_cmd)
-	if strcharpart(l:cmd_part, 0, 1) == '"'
-		let l:exe_path = split(l:cmd_part, '"')[0]
-		let l:exe_path_print = '"' . l:exe_path . '"'
-	else
-		let l:exe_path = split(l:cmd_part)[0]
-		let l:exe_path_print = l:exe_path
-	endif
-
-	if !executable(l:exe_path)
-		echohl ErrorMsg
-		echo l:exe_path_print . ' is not executable.' |
-		echo 'Try :NuxtexChkFwdCmd to check forward search command.' |
-		echo 'And you should change settings of g:nuxtex_viewer_type or g:nuxtex_zathura_cmd.'
-		echohl None
-		return v:false
-	endif
-	return v:true
-endfunction
+"function s:chk_viewer_cmd(fwd_cmd) abort
+"	let l:cmd_part = trim(a:fwd_cmd)
+"	if strcharpart(l:cmd_part, 0, 1) == '"'
+"		let l:exe_path = split(l:cmd_part, '"')[0]
+"		let l:exe_path_print = '"' . l:exe_path . '"'
+"	else
+"		let l:exe_path = split(l:cmd_part)[0]
+"		let l:exe_path_print = l:exe_path
+"	endif
+"
+"	if !executable(l:exe_path)
+"		echohl ErrorMsg
+"		echo l:exe_path_print . ' is not executable.' |
+"		echo 'Try :NuxtexChkFwdCmd to check forward search command.' |
+"		echo 'And you should change settings of g:nuxtex_viewer_type or g:nuxtex_zathura_cmd.'
+"		echohl None
+"		return v:false
+"	endif
+"	return v:true
+"endfunction
 
 function s:modify_pdf_cmd(input_src, output_pdf) abort
 "TO DO embed fnameescape().
@@ -321,6 +326,9 @@ function s:modify_pdf_cmd(input_src, output_pdf) abort
 		let l:output_pdf = a:output_pdf
 	endif
 	let l:viewer_cmd = s:synctex_cmd_collection()
+	if l:viewer_cmd == ''
+		return ''
+	endif
 	let l:fwd_cmd = substitute(l:viewer_cmd, '@pdf', '\=l:output_pdf', 'g')
 	let l:fwd_cmd = substitute(l:fwd_cmd, '@line', line('.'), 'g')
 	let l:fwd_cmd = substitute(l:fwd_cmd, '@col', col('.'), 'g')
