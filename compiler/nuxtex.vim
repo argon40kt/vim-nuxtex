@@ -20,7 +20,7 @@ if exists('b:nuxtex_makeprg')
 elseif exists('g:nuxtex_makeprg')
   let &l:makeprg=g:nuxtex_makeprg
 else
-  let &l:makepg='make'
+  let &l:makeprg='make'
 endif
 CompilerSet errorformat=%m
 
