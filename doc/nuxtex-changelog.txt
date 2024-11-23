@@ -6,6 +6,20 @@ Licence: MIT licence
 ==============================================================================
 CHANGELOG ~					*nuxtex-changelog*
 
+0.3		2024/11/23
+		- Add support for non-compressed .synctex file for synctex
+		plugin.
+		- Set |makeprg| as `make` by default when `:compiler nuxtex` is
+		executed.
+		- Add support for `cluttex`.
+		- Execution command check improvement for synctex plugin.
+		- Bug fixing irregular source file name for compiler plugin.
+		- Bug fixing irregular source/pdf file name for synctex plugin.
+		- Separate this change log from |nuxtex.txt|
+		- Refactoring s:tex_root() function.
+		- Remove unnecessarry error handling.
+		- Other code clean up.
+
 0.2		2024/9/16
 		- GNU make feature `make -C` and sub-make support added.
 		- Bug under specific file name was fixed (both quickfix and

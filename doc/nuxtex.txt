@@ -82,8 +82,9 @@ execute these commands, you should set up the compilation method.
 There are some methods. I will explain some examples.
 
 Example 1: Use make shell command ~
-By default, |:make| command execute make shell command. You can also use this
-option on NuxTeX.
+By default, |:make| command execute make shell command. NuxTeX will set
+automatically `make` command as |makeprg| when `compiler[!] nuxtex` was
+executed if |b:nuxtex_makeprg| or |g:nuxtex_makeprg| was not set.
 In this case, you shoule prepare Makefile described compilation method.
 If you would like to compile the 'foo.tex' document by latex shell command,
 you should put the 'Makefile' file in the same directory of the 'foo.tex' and
@@ -138,10 +139,10 @@ generate pdf at one time, you can use latexmk.
 Example 4: Directly update |makeprg|.
 As described in above, |b:nuxtex_makeprg| and |b:nuxtex_makeprg| will update
 |makeprg| when `:compiler nuxtex` has been done. You can also update the
-compile method by directly update |makeprg|. In this method, you can update
-compiler after once `:compiler nuxtex` has been executed. You may edit some
-scripts if you would like to multiple compilers in multiple laungage without
-using |b:nuxtex_makeprg| or |g:nuxtex_makeprg|.
+compile method by directly update |makeprg|. In this method, you can overwrite
+|makeprg| manualy after once `:compiler nuxtex` has been executed. You may
+edit some scripts if you would like to multiple compilers in multiple laungage
+without using |b:nuxtex_makeprg| or |g:nuxtex_makeprg|.
 
 >
 	let &makeprg = "latexmk -pdfdvi -latex=latex -synctex=1 -e \"\\$dvipdf='dvipdfmx \\%O \\%S';\\$bibtex='bibtex';\" %:p"
@@ -498,17 +499,17 @@ g:nuxtex_zathura_opt				*g:nuxtex_zathura_opt*
 
 g:nuxtex_syncsrc_escape				*g:nuxtex_syncsrc_escape*
 	Type: boolean
-	Default: v:true
+	Default: |v:true|
 	This variables for activate or deactivate shell escaping TeX source
-	path when send forward search command. v:true is activation and
-	v:false is deactivation. So it is activated by default.
+	path when send forward search command. |v:true| is activation and
+	|v:false| is deactivation. So it is activated by default.
 
 g:nuxtex_syncpdf_escape				*g:nuxtex_syncpdf_escape*
 	Type: boolean
-	Default: v:true
+	Default: |v:true|
 	This variables for activate or deactivate shell escaping output pdf
-	file path when send forward search command. v:true is activation and
-	v:false is deactivation. So it is activated by default.
+	file path when send forward search command. |v:true| is activation and
+	|v:false| is deactivation. So it is activated by default.
 
 ==============================================================================
 COMMANDS					*nuxtex-commands*
