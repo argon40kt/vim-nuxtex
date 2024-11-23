@@ -267,45 +267,20 @@ function s:exec_pdf_view(input_src, output_pdf) abort
 	if l:fwd_cmd == ''
 		return
 	endif
-	"if s:chk_viewer_cmd(l:fwd_cmd) == v:false
-	"	return
-	"endif
-
 	"let l:fwd_cmd = substitute(l:fwd_cmd, '%', '\\%', 'g')
 	"let l:fwd_cmd = substitute(l:fwd_cmd, '#', '\\#', 'g')
 	"let l:fwd_cmd = substitute(l:fwd_cmd, '!', '\\!', 'g')
 	if has('win32')
 		let l:start_cmd = 'start cmd /s /c "start "" '
-		let l:fwd_cmd = l:start_cmd . a:fwd_cmd . '"'
+		let l:fwd_cmd = l:start_cmd . l:fwd_cmd . '"'
 	else
-		let l:fwd_cmd = a:fwd_cmd . ' > /dev/null 2>&1 &'
+		let l:fwd_cmd = l:fwd_cmd . ' > /dev/null 2>&1 &'
 	endif
 	"silent exe '!' . l:fwd_cmd
 	call system(l:fwd_cmd)
 	redraw!
 	"echo l:fwd_cmd
 endfunction
-
-"function s:chk_viewer_cmd(fwd_cmd) abort
-"	let l:cmd_part = trim(a:fwd_cmd)
-"	if strcharpart(l:cmd_part, 0, 1) == '"'
-"		let l:exe_path = split(l:cmd_part, '"')[0]
-"		let l:exe_path_print = '"' . l:exe_path . '"'
-"	else
-"		let l:exe_path = split(l:cmd_part)[0]
-"		let l:exe_path_print = l:exe_path
-"	endif
-"
-"	if !executable(l:exe_path)
-"		echohl ErrorMsg
-"		echo l:exe_path_print . ' is not executable.' |
-"		echo 'Try :NuxtexChkFwdCmd to check forward search command.' |
-"		echo 'And you should change settings of g:nuxtex_viewer_type or g:nuxtex_zathura_cmd.'
-"		echohl None
-"		return v:false
-"	endif
-"	return v:true
-"endfunction
 
 function s:modify_pdf_cmd(input_src, output_pdf) abort
 "TO DO embed fnameescape().
